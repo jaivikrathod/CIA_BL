@@ -22,8 +22,11 @@ const CommonGeneral = require('./Insurance/common-general');
 const ListInsuranceDetail = require('./Insurance/list-insurance');
 const uploadKycDocumentController = require('./cutomer/uploadDocument');
 
+const changePass = require('./changePass');
+
 router.post('/login', loginController.handleLogin);
 router.post('/signup', signupController.handleSignup);
+router.post('/change-password/:id', changePass.changePass);
 router.post('/verify-token', tokenController.handleTokenVerification);
 router.post('/customer-create-edit', customerAddEditController.handleAddEditCustomer);
 router.post('/user-create-edit', userAddEditController.handleAddEditUser);
