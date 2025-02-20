@@ -12,14 +12,14 @@ exports.vehicalCommon = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const vehicleId = parseInt(id, 10); // Convert id to integer
+    const id2 = parseInt(id, 10); // Convert id to integer
 
     const query = `
       UPDATE insurance_details
       SET vehicle_number = ?, manufacturer = ?, model = ?, year_of_manufacture = ?, fuel_type = ? 
       WHERE id = ?`;
 
-    const values = [Register_No, Manufacturer, Model, YOM, fuel_type, vehicleId];
+    const values = [Register_No, Manufacturer, Model, YOM, fuel_type, id2];
 
     // Use db.execute() to run the query
     const [results] = await db.execute(query, values);

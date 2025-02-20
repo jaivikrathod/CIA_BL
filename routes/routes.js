@@ -22,6 +22,10 @@ const CommonGeneral = require('./Insurance/common-general');
 const ListInsuranceDetail = require('./Insurance/list-insurance');
 const uploadKycDocumentController = require('./cutomer/uploadDocument');
 
+const CheckCustomer = require('./cutomer/CheckCustomer');   
+
+const CreateInsurance = require('./Insurance/CreateInsurance');
+
 const changePass = require('./changePass');
 
 router.post('/login', loginController.handleLogin);
@@ -49,5 +53,12 @@ router.get('/getUsersCounts',getUsersCounts.getUsersCounts);
 router.get('/getCustomerCounts',getCustomerCounts.getCustomerCounts);
 router.get('/getNewCustomerCounts',getCustomerCounts.getNewCustomerCounts);
 router.get('/getInsuranceCounts',getInsuranceCounts.getInsuranceCounts);
+
+router.post('/check-customer', CheckCustomer.CheckCustomer);
+
+
+router.post('/create-insurance', CreateInsurance.CreateInsurance);
+router.post('/renew-insurance', CreateInsurance.RenewInsurance);
+
 
 module.exports = router;

@@ -13,28 +13,29 @@ exports.InitialDetails = async (req, res) => {
             let insertedId;
 
             if (data.id) {
-                query = 'UPDATE insurance_details SET customer_id = ?, insurance_type = ? WHERE id = ?';
-                params = [data.id, data.insuranceType, data.id];
+                query = 'UPDATE insurance_details SET  insurance_type = ? WHERE id = ?';
+                params = [ data.insuranceType, data.id];
                 await db.execute(query, params);
                 insertedId = data.id; // If updating, the ID is already known
-            } else {
-                // Fetch customer ID
-                const customerQuery = 'SELECT id FROM customer WHERE email = ?';
-                const [customerResult] = await db.execute(customerQuery, [data.mail]);
+            } 
+            // else {
+            //     // Fetch customer ID
+            //     const customerQuery = 'SELECT id FROM customer WHERE email = ?';
+            //     const [customerResult] = await db.execute(customerQuery, [data.mail]);
 
-                if (customerResult.length === 0) {
-                    return res.json({ success: false, message: "Customer not found" });
-                }
+            //     if (customerResult.length === 0) {
+            //         return res.json({ success: false, message: "Customer not found" });
+            //     }
 
-                const customer_id = customerResult[0].id;
+            //     const customer_id = customerResult[0].id;
 
-                // Insert into insurance_details
-                query = 'INSERT INTO insurance_details (customer_id, insurance_type) VALUES(?, ?)';
-                params = [customer_id, data.insuranceType];
-                const [result] = await db.execute(query, params);
+            //     // Insert into insurance_details
+            //     query = 'INSERT INTO insurance_details (customer_id, insurance_type) VALUES(?, ?)';
+            //     params = [customer_id, data.insuranceType];
+            //     const [result] = await db.execute(query, params);
 
-                insertedId = result.insertId; // Retrieve the ID of the inserted row
-            }
+            //     insertedId = result.insertId; // Retrieve the ID of the inserted row
+            // }
 
             return res.json({ success: true, message: "Operation successful.", id: insertedId });
         } catch (e) {
