@@ -14,6 +14,7 @@ exports.RenewInsurance = async (req, res) => {
 
         const dataToInsert = { ...existingData[0] };
         delete dataToInsert.id; 
+        delete dataToInsert.insurance_date;
 
         const [response] = await db.query(
             'INSERT INTO insurance_details SET ?',

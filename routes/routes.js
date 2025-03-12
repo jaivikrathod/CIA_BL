@@ -20,7 +20,8 @@ const FillInitialDetail = require('./Insurance/fill-initial-detail');
 const CommonVehical = require('./Insurance/common-vehical');
 const CommonGeneral = require('./Insurance/common-general');
 const ListInsuranceDetail = require('./Insurance/list-insurance');
-const uploadKycDocumentController = require('./cutomer/uploadDocument');
+const uploadDocument = require('./upload_documents/uploadDocument');
+const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc');
 
 const CheckCustomer = require('./cutomer/CheckCustomer');   
 
@@ -47,7 +48,9 @@ router.post('/common-vehical',CommonVehical.vehicalCommon);
 router.post('/common-general',CommonGeneral.generalCommon);
 
 router.post('/insurance-list',ListInsuranceDetail.listInsurance);
-router.post('/upload',uploadKycDocumentController.uploadKycDocument);
+
+router.post('/upload-customer',uploadDocument.uploadKycDocument);
+router.post('/upload-insurance',uploadInsuranceDocument.uploadInsuranceDocument);
 
 router.get('/getUsersCounts',getUsersCounts.getUsersCounts);
 router.get('/getCustomerCounts',getCustomerCounts.getCustomerCounts);
