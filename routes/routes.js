@@ -23,12 +23,11 @@ const ListInsuranceDetail = require('./Insurance/list-insurance');
 const uploadDocument = require('./upload_documents/uploadDocument');
 const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc');
 const showCustomerDocument = require('./cutomer/displaydoc'); 
-
-const CheckCustomer = require('./cutomer/CheckCustomer');   
-
+const CheckCustomer = require('./cutomer/CheckCustomer'); 
 const CreateInsurance = require('./Insurance/CreateInsurance');
 
 const changePass = require('./changePass');
+const deleteDocument = require('./cutomer/deleteDocument');
 
 router.post('/login', loginController.handleLogin);
 router.post('/signup', signupController.handleSignup);
@@ -62,6 +61,7 @@ router.post('/check-customer', CheckCustomer.CheckCustomer);
 
 router.get('/get-customer-uploads/:filename',showCustomerDocument.showdocument);
 
+router.post('/delete-customer-document',deleteDocument.deleteDocument);
 
 router.post('/create-insurance', CreateInsurance.CreateInsurance);
 router.post('/renew-insurance', CreateInsurance.RenewInsurance);
