@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const db = require('../../config/db');
+const e = require('express');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -13,7 +14,8 @@ const storage = multer.diskStorage({
         cb(null, folderPath);
     },
     filename: (req, file, cb) => {
-        const newFileName = `${req.body.customer_id}_${Date.now()}_${file.originalname}`;
+        const extention = path.extname(file.originalname);
+        const newFileName = `${req.body.customer_id}${Date.now()}${extention}`;
         cb(null, newFileName);
     }
 });
@@ -41,7 +43,7 @@ exports.uploadKycDocument = (req, res) => {
             return res.status(400).json({ message: err.message });
         }
 
-        const { document_type, customer_id,isCustomerDoc } = req.body;
+        const { document_type, customer_id } = req.body;
 
         if (!document_type || !customer_id) {
             return res.status(400).json({ message: 'Missing required fields: document_type or customer_id' });
@@ -55,7 +57,8 @@ exports.uploadKycDocument = (req, res) => {
             let folderName = 'customer-uploads';
             let table = 'customer';
             const filePath = path.join(__dirname, `../../${folderName}`, req.file.filename);
-            const newFileName = `${customer_id}_${Date.now()}_${req.file.originalname}`;
+            const extention = path.extname(req.file.originalname);
+            const newFileName = `${customer_id}_${Date.now()}${extention}`;
             const finalPath = path.join(__dirname,`../../${folderName}`, newFileName);
         
             fs.rename(filePath, finalPath, (err) => {
@@ -68,6 +71,7 @@ exports.uploadKycDocument = (req, res) => {
             let document = {
                 name: newFileName,
                 type: document_type,
+                ext : extention,
             };
         
             const existingDocumentQuery = `SELECT documents FROM ${table} WHERE id = ?`;

@@ -22,6 +22,7 @@ const CommonGeneral = require('./Insurance/common-general');
 const ListInsuranceDetail = require('./Insurance/list-insurance');
 const uploadDocument = require('./upload_documents/uploadDocument');
 const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc');
+const showCustomerDocument = require('./cutomer/displaydoc'); 
 
 const CheckCustomer = require('./cutomer/CheckCustomer');   
 
@@ -58,6 +59,8 @@ router.get('/getNewCustomerCounts',getCustomerCounts.getNewCustomerCounts);
 router.get('/getInsuranceCounts',getInsuranceCounts.getInsuranceCounts);
 
 router.post('/check-customer', CheckCustomer.CheckCustomer);
+
+router.get('/get-customer-uploads/:filename',showCustomerDocument.showdocument);
 
 
 router.post('/create-insurance', CreateInsurance.CreateInsurance);
