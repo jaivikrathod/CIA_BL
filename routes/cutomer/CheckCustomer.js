@@ -1,7 +1,8 @@
-const db = require('../../config/db');  // Make sure your db connection is correctly configured
+const db = require('../../config/db');  
+const { v4: uuidv4 } = require('uuid');
 
 exports.CheckCustomer = async (req, res) => {
-    const { email } = req.body;  // Extract email from the request body
+    const { email } = req.body;  
 
     if (!email) {
         return res.status(400).json({
@@ -11,23 +12,27 @@ exports.CheckCustomer = async (req, res) => {
     }
 
     try {
-        // Query the database to find the customer with the provided email
         const [customers] = await db.execute('SELECT * FROM customer WHERE email = ?', [email]);
 
         if (customers.length === 0) {
-            // If no customer is found with that email
             return res.json({
                 success: false,
                 message: 'No customer found with this email.',
             });
         }
-
-        // If customer is found, return the customer data
-        return res.status(200).json({
-            success: true,
-            message: 'Customer found.',
-            customerId: customers[0].id,  // assuming the customer table has an 'id' field
-        });
+        try {
+            const common_id = uuidv4();
+            const [response] = await db.query('INSERT INTO insurance_details (customer_id, common_id,is_latest) VALUES(?, ?,1)', [customers[0].id,common_id]);
+            const InsertedID = response.insertId;
+            if(InsertedID){    
+                return res.json({ success: true,id:InsertedID, message: 'Insurance created successfully.' });
+            }else{
+                return res.json({ success: false, message: 'Failed to create insurance.'});
+            }
+        } catch (error) {
+            console.error('Error in listCustomer:', error);
+            return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+        }
 
     } catch (error) {
         console.error('Error in CheckCustomer:', error);

@@ -29,6 +29,8 @@ const CreateInsurance = require('./Insurance/CreateInsurance');
 const changePass = require('./changePass');
 const deleteDocument = require('./cutomer/deleteDocument');
 
+const getParticularInsurance = require('./Insurance/list-insurance');
+
 router.post('/login', loginController.handleLogin);
 router.post('/signup', signupController.handleSignup);
 router.post('/change-password/:id', changePass.changePass);
@@ -59,12 +61,15 @@ router.get('/getInsuranceCounts',getInsuranceCounts.getInsuranceCounts);
 
 router.post('/check-customer', CheckCustomer.CheckCustomer);
 
-router.get('/get-customer-uploads/:filename',showCustomerDocument.showdocument);
+router.get('/get-customer-uploads/:filename',showCustomerDocument.showCustomerdocument);
 
 router.post('/delete-customer-document',deleteDocument.deleteDocument);
 
 router.post('/create-insurance', CreateInsurance.CreateInsurance);
 router.post('/renew-insurance', CreateInsurance.RenewInsurance);
+
+router.get('/particular-insurance',getParticularInsurance.getParticularInsurance);
+router.get('/get-insurance-docs/:filename',showCustomerDocument.showInsurancedocument);
 
 
 module.exports = router;

@@ -46,7 +46,8 @@ exports.generalCommon = async (req, res) => {
         agent_code = ?,
         payout_percent = ?,
         amount = ?,
-        tds = ?
+        tds = ?,
+        is_latest = 1
       WHERE id = ?
     `;
 
