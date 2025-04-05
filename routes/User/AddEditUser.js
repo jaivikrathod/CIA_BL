@@ -1,7 +1,7 @@
 const db = require('../../config/db');
 const bcrypt = require('bcryptjs');
 
-const password = 'Password@123';
+const password = 'Passwd@123';
 const saltRounds = 10;
 
 

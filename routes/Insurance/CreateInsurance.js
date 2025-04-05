@@ -69,10 +69,6 @@ exports.RenewInsurance = async (req, res) => {
             [dataToInsert]
         );
 
-        console.log(response, 'response');
-        
-
-
         if (response?.insertId) {
             const check = await db.query(
                 'UPDATE insurance_details SET is_latest = 0 WHERE id = ?',
