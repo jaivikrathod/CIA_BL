@@ -7,9 +7,9 @@ const routes = require('./routes/routes');
 
 // Middleware to enable CORS
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
-    methods: ['GET', 'POST'], // Specify the allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'] // Specify allowed headers
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'], 
+    allowedHeaders: ['Content-Type', 'Authorization','X-User-ID'] 
 }));
 
 app.use(express.json());

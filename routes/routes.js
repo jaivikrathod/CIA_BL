@@ -30,46 +30,51 @@ const changePass = require('./changePass');
 const deleteDocument = require('./cutomer/deleteDocument');
 
 const getParticularInsurance = require('./Insurance/list-insurance');
+const validateUser = require('../authmiddleware');
+const protectedRouter = express.Router();
+protectedRouter.use(validateUser.validateUser);
+
+
 
 router.post('/login', loginController.handleLogin);
 router.post('/signup', signupController.handleSignup);
 router.post('/change-password/:id', changePass.changePass);
-router.post('/verify-token', tokenController.handleTokenVerification);
+router.post('/verify-token',protectedRouter, tokenController.handleTokenVerification);
 router.post('/customer-create-edit', customerAddEditController.handleAddEditCustomer);
 router.post('/user-create-edit', userAddEditController.handleAddEditUser);
 
-router.post('/customer-delete', customerDeleteController.handleDeleteCustomer);
-router.post('/user-delete', userDeleteController.handleDeleteUser);
+router.post('/customer-delete',protectedRouter, customerDeleteController.handleDeleteCustomer);
+router.post('/user-delete',protectedRouter, userDeleteController.handleDeleteUser);
 
-router.post('/customer-list', customerListController.listCustomers);
-router.post('/user-list', userListController.listUsers);
+router.post('/customer-list',protectedRouter, customerListController.listCustomers);
+router.post('/user-list',protectedRouter, userListController.listUsers);
 
-router.post('/fill-initial-details',FillInitialDetail.InitialDetails);
+router.post('/fill-initial-details',protectedRouter,FillInitialDetail.InitialDetails);
 
-router.post('/common-vehical',CommonVehical.vehicalCommon);
-router.post('/common-general',CommonGeneral.generalCommon);
+router.post('/common-vehical',protectedRouter,CommonVehical.vehicalCommon);
+router.post('/common-general',protectedRouter,CommonGeneral.generalCommon);
 
-router.post('/insurance-list',ListInsuranceDetail.listInsurance);
+router.post('/insurance-list',protectedRouter,ListInsuranceDetail.listInsurance);
 
-router.post('/upload-customer',uploadDocument.uploadKycDocument);
-router.post('/upload-insurance',uploadInsuranceDocument.uploadInsuranceDocument);
+router.post('/upload-customer',protectedRouter,uploadDocument.uploadKycDocument);
+router.post('/upload-insurance',protectedRouter,uploadInsuranceDocument.uploadInsuranceDocument);
 
-router.get('/getUsersCounts',getUsersCounts.getUsersCounts);
-router.get('/getCustomerCounts',getCustomerCounts.getCustomerCounts);
-router.get('/getNewCustomerCounts',getCustomerCounts.getNewCustomerCounts);
-router.get('/getInsuranceCounts',getInsuranceCounts.getInsuranceCounts);
+router.get('/getUsersCounts',protectedRouter,getUsersCounts.getUsersCounts);
+router.get('/getCustomerCounts',protectedRouter,getCustomerCounts.getCustomerCounts);
+router.get('/getNewCustomerCounts',protectedRouter,getCustomerCounts.getNewCustomerCounts);
+router.get('/getInsuranceCounts',protectedRouter,getInsuranceCounts.getInsuranceCounts);
 
-router.post('/check-customer', CheckCustomer.CheckCustomer);
+router.post('/check-customer',protectedRouter, CheckCustomer.CheckCustomer);
 
-router.get('/get-customer-uploads/:filename',showCustomerDocument.showCustomerdocument);
+router.get('/get-customer-uploads/:filename', protectedRouter,showCustomerDocument.showCustomerdocument);
 
-router.post('/delete-customer-document',deleteDocument.deleteDocument);
+router.post('/delete-customer-document',protectedRouter,deleteDocument.deleteDocument);
 
-router.post('/create-insurance', CreateInsurance.CreateInsurance);
-router.post('/renew-insurance', CreateInsurance.RenewInsurance);
+router.post('/create-insurance',protectedRouter, CreateInsurance.CreateInsurance);
+router.post('/renew-insurance',protectedRouter, CreateInsurance.RenewInsurance);
 
-router.get('/particular-insurance',getParticularInsurance.getParticularInsurance);
-router.get('/get-insurance-docs/:filename',showCustomerDocument.showInsurancedocument);
+router.get('/particular-insurance',protectedRouter,getParticularInsurance.getParticularInsurance);
+router.get('/get-insurance-docs/:filename',protectedRouter,showCustomerDocument.showInsurancedocument);
 
 
 module.exports = router;

@@ -8,7 +8,6 @@ const JWT_EXPIRES_IN = '24h';
 exports.handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password);
 
         // Check if email and password are provided
         if (!email || !password) {
