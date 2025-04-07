@@ -51,7 +51,9 @@ exports.handleLogin = async (req, res) => {
             success: true,
             message: 'Login successful.',
             id: user.id,
-            token: token
+            token: token,
+            full_name: user.full_name,
+            type: user.type,
         });
 
     } catch (err) {

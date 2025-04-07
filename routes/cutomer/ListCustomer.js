@@ -2,7 +2,17 @@ const db = require('../../config/db');
 
 exports.listCustomers = async (req, res) => {
     try {
-        const [customers] = await db.execute('SELECT * FROM customer');
+
+        const adminType = req.headers['admintype'];
+        let customers;
+        
+        if(adminType =='Admin'){
+            [customers] = await db.execute('SELECT * FROM customer');
+        }else{
+            const user_id = req.headers['x-user-id'];
+            [customers] = await db.execute('SELECT * FROM customer WHERE user_id = ?', [user_id]);
+        }
+
         if (customers.length === 0) {
             return res.status(200).json({ success: true, message: 'No customers found.' });
         }

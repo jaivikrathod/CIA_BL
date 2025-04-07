@@ -1,3 +1,4 @@
+const { response } = require('express');
 const db = require('../../config/db');
 
 exports.handleAddEditCustomer = async (req, res) => {
@@ -11,25 +12,51 @@ exports.handleAddEditCustomer = async (req, res) => {
             });
         }
 
-        const upsertQuery = `
-            INSERT INTO customer (id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE
-                full_name = VALUES(full_name),
-                email = VALUES(email),
-                primary_mobile = VALUES(primary_mobile),
-                additional_mobile = VALUES(additional_mobile),
-                dob = VALUES(dob),
-                gender = VALUES(gender),
-                state = VALUES(state),
-                city = VALUES(city),
-                full_address = VALUES(full_address)
-        `;
+        const user_id = req.headers['x-user-id'];
+        // Check if the email or primary mobile already exists in the database
 
-        await db.execute(upsertQuery, [id || null, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address]);
+        const [check] = await db.query(
+            'SELECT 1 FROM customer WHERE (email = ? OR primary_mobile = ?) AND id != ? LIMIT 1',
+            [email, primary_mobile, id || 0]
+        );
+
+        if (check.length > 0) {
+            return res.json({
+                success: false,
+                message: 'Email or primary mobile already exists.'
+            });
+        }
+
+        let response = '';
+
+        if (!id) {
+            response = await db.execute(`
+            INSERT INTO customer (user_id,full_name, email, primary_mobile, additional_mobile, dob, gender, state, city,full_address)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [user_id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address]);
+        } else {
+            response = await db.execute(`
+                UPDATE customer SET 
+                  full_name = ?, 
+                  email = ?, 
+                  primary_mobile = ?, 
+                  additional_mobile = ?, 
+                  dob = ?, 
+                  gender = ?, 
+                  state = ?, 
+                  city = ?, 
+                  full_address = ?
+                WHERE id = ?
+              `, [full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address, id]);
+              
+        }
+
+        if (response.affectedRows === 0) {
+            return res.status(500).json({ success: false, message: 'Failed to add or update customer.' });
+        }
 
         return res.status(200).json({ success: true, message: id ? 'Customer updated successfully.' : 'New customer created successfully.' });
-        
+
     } catch (error) {
         console.error('Error in handleUpsertCustomer:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
