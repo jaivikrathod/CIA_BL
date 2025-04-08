@@ -6,7 +6,7 @@ exports.RenewInsurance = async (req, res) => {
 
     try {
         const [existingData] = await db.query(
-            'SELECT * FROM insurance_details WHERE is_latest = 1 AND id = ?',
+            'SELECT * FROM insurance_details WHERE is_latest = 1 AND insurance_id = ?',
             [req.body.id]
         );
 
