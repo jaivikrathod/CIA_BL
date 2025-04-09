@@ -41,7 +41,7 @@ exports.uploadInsuranceDocument = (req, res) => {
             return res.status(400).json({ message: err.message });
         }
 
-        const { document_type, customer_id,isCustomerDoc } = req.body;
+        const { document_type, customer_id } = req.body;
 
         if (!document_type || !customer_id) {
             return res.status(400).json({ message: 'Missing required fields: document_type or customer_id' });

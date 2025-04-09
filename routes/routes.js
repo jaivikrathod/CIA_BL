@@ -72,7 +72,7 @@ router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);
 const uploadDocument = require('./upload_documents/uploadDocument');
 const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc');
 
-router.post('/upload-customer', uploadDocument.uploadKycDocument);
-router.post('/upload-insurance', uploadInsuranceDocument.uploadInsuranceDocument);
+router.post('/upload-customer',protectedRouter, uploadDocument.uploadKycDocument);
+router.post('/upload-insurance',protectedRouter, uploadInsuranceDocument.uploadInsuranceDocument);
 
 module.exports = router;

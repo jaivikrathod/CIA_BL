@@ -2,12 +2,10 @@ const db = require('../../config/db');
 
 exports.vehicalCommon = async (req, res) => {
   try {
-    console.log("Inside vehicalCommon", req.body);
-
-    const { Register_No, Manufacturer, Model, YOM, fuel_type, id } = req.body;
+    const {userid, Register_No, Manufacturer, Model, YOM, fuel_type, id } = req.body;
 
     // Validate the incoming data
-    if (!Register_No || !Manufacturer || !Model || !YOM || !fuel_type) {
+    if (!Register_No || !Manufacturer || !Model || !YOM || !fuel_type || !userid || !id) {
       console.log("All fields are required");
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -15,11 +13,11 @@ exports.vehicalCommon = async (req, res) => {
     const id2 = parseInt(id, 10); // Convert id to integer
 
     const query = `
-      UPDATE insurance_details
-      SET vehicle_number = ?, manufacturer = ?, model = ?, year_of_manufacture = ?, fuel_type = ? 
+      UPDATE insurance_common_details
+      SET user_id=?,vehicle_number = ?, manufacturer = ?, model = ?, yom = ?, fuel_type = ? 
       WHERE id = ?`;
 
-    const values = [Register_No, Manufacturer, Model, YOM, fuel_type, id2];
+    const values = [userid,Register_No, Manufacturer, Model, YOM, fuel_type, id2];
 
     // Use db.execute() to run the query
     const [results] = await db.execute(query, values);
@@ -29,7 +27,6 @@ exports.vehicalCommon = async (req, res) => {
       return res.status(404).json({ message: 'No matching record found' });
     }
 
-    console.log("Data updated successfully", results);
     return res.status(200).json({ message: true });
 
   } catch (error) {

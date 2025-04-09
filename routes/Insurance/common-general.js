@@ -5,9 +5,8 @@ const { v4: uuidv4 } = require('uuid');
 exports.generalCommon = async (req, res) => {
   try {
 
-    const common_id = uuidv4();
 
-    const {
+    let {
       IDV,
       CURRENTNCB,
       INSURANCE,
@@ -28,9 +27,18 @@ exports.generalCommon = async (req, res) => {
       AMMOUNT,
       TDS,
       userID,
-      id
+      id,
+      common_id
     } = req.body;
 
+    let insurance_count=1;
+    if(common_id){
+         const [count] = await db.execute('select COUNT(*) as count from insurance_details where common_id = ?', [common_id]);
+         insurance_count = count[0].count + 1;
+
+    }else{
+      common_id = uuidv4();
+    }
     const sql = `
       INSERT INTO insurance_details
       (
@@ -56,9 +64,9 @@ exports.generalCommon = async (req, res) => {
         payout_percent,
         amount,
         tds,
-        is_latest
+        insurance_count
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -83,14 +91,22 @@ exports.generalCommon = async (req, res) => {
       AGNTCODE,
       PAYOUTPERCCENT,
       AMMOUNT,
-      TDS
+      TDS,
+      insurance_count
     ];
-
     // Use db.execute() to execute the query
     const [results] = await db.execute(sql, values);
 
-    console.log("Data inserted successfully", results);
-    return res.json({ message: true, id: results.insertId });
+    if (results.affectedRows > 0) {
+      // Successfully inserted
+      console.log("Insurance details inserted successfully:", results.insertId);
+      return res.json({ success: true, id: results.insertId,message:'Insurance details inserted successfully'});
+    }
+    else {
+      // Insertion failed
+      console.log("Failed to insert insurance details.");
+      return res.json({ success: false,message:'Failed to insert insurance details.'});
+    }
 
   } catch (error) {
     console.error('Unexpected error:', error);
