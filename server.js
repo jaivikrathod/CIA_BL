@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3005;
+require('dotenv').config();
+const port = process.env.PORT || 3005;
 
 const routes = require('./routes/routes');
-
 // Middleware to enable CORS
 app.use(cors({
     origin: 'http://localhost:3000',
