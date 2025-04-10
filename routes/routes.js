@@ -75,4 +75,13 @@ const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc')
 router.post('/upload-customer',protectedRouter, uploadDocument.uploadKycDocument);
 router.post('/upload-insurance',protectedRouter, uploadInsuranceDocument.uploadInsuranceDocument);
 
+//====================== Agent Management ====================
+
+const agentAddEditController = require('./Agent/AgentManagement');
+
+router.post('/agent-create-edit', protectedRouter, agentAddEditController.handleAddEditAgent);
+router.get('/agent-list', protectedRouter, agentAddEditController.listAgents);
+router.post('/agent-delete', protectedRouter, agentAddEditController.handleDeleteAgent);
+
+
 module.exports = router;
