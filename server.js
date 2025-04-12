@@ -7,7 +7,7 @@ const port = process.env.PORT || 3005;
 const routes = require('./routes/routes');
 // Middleware to enable CORS
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: ['GET', 'POST'], 
     allowedHeaders: ['Content-Type', 'Authorization','X-User-ID','adminType'] 
 }));
