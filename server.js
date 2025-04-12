@@ -2,12 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT || 3005;
+const port = process.env.DB_PORT || 3005;
 
 const routes = require('./routes/routes');
 // Middleware to enable CORS
 app.use(cors({
-    origin: 'http://careinsuranceagency.surge.sh',
+    origin: '*',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization','X-User-ID','adminType']
 }));
