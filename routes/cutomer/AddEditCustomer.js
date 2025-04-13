@@ -30,9 +30,9 @@ exports.handleAddEditCustomer = async (req, res) => {
 
         if (!id) {
             response = await db.execute(`
-            INSERT INTO customer (user_id,full_name, email, primary_mobile, additional_mobile, dob, gender, state, city,full_address)
+            INSERT INTO customer (user_id,full_name, email, primary_mobile, additional_mobile, dob, gender, state, city,full_address,documents)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [user_id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address]);
+        `, [user_id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address,null]);
         } else {
             response = await db.execute(`
                 UPDATE customer SET 
