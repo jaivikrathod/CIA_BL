@@ -44,9 +44,13 @@ exports.listCustomers = async (req, res) => {
             params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
         }
 
-        // Add pagination (fetch one extra record)
-        query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
-        params.push(limitPlusOne, offset);
+        if(limit==0){
+            // Add pagination (fetch one extra record)
+            query += ' ORDER BY id DESC';
+        }else{
+            query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+            params.push(limitPlusOne, offset);
+        }
 
         console.log('Final Query:', query);
         console.log('Query Parameters:', params);
