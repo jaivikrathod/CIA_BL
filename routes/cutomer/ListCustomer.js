@@ -3,16 +3,16 @@ const db = require('../../config/db');
 exports.listCustomers = async (req, res) => {
     try {
         const { search, gender, minAge, maxAge, page = 1, limit = 10 } = req.body;
-        const adminType = req.headers['admintype'];
+        // const adminType = req.headers['admintype'];
 
         const offset = (page - 1) * limit;
         const limitPlusOne = limit + 1;
 
         let query = 'SELECT * FROM customer WHERE 1=1';
         const params = [];
-
+        
         // Add user_id filter for non-admin users
-        if (adminType !== 'Admin') {
+        if (req.userType !== 'Admin') {
             const user_id = req.headers['x-user-id'];
             query += ' AND user_id = ?';
             params.push(user_id);

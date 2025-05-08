@@ -31,17 +31,18 @@ exports.handleAddEditAgent = async (req, res) => {
 
         if (!id) {
             response = await db.execute(`
-            INSERT INTO agents (full_name, email, primary_mobile)
+            INSERT INTO agents (full_name, email, primary_mobile,user_id)
             VALUES (?, ?, ?)
-        `, [ full_name, email, primary_mobile]);
+        `, [ full_name, email, primary_mobile,req.userID]);
         } else {
             response = await db.execute(`
                 UPDATE agents SET 
                   full_name = ?, 
                   email = ?, 
                   primary_mobile = ?
+                  user_id = ?
                 WHERE id = ?
-              `, [full_name, email, primary_mobile, id]);
+              `, [full_name, email, primary_mobile,req.userID, id]);
               
         }
 
@@ -60,11 +61,22 @@ exports.handleAddEditAgent = async (req, res) => {
 
 
 exports.listAgents = async (req, res) => {
-    const [response] = await db.execute('SELECT * FROM agents');
-    if (response.length === 0) {
-        return res.status(404).json({ success: false, message: 'No agents found.' });
+    try{
+        let response;
+        if(req.userType == 'Admin'){
+            [response] = await db.execute('SELECT * FROM agents');
+        }else{
+            [response] = await db.execute('SELECT * FROM agents where user_id = ?',[req.userID]);
+        }
+        
+        if (response.length === 0) {
+            return res.status(404).json({ success: false, message: 'No agents found.' });
+        }
+        return res.status(200).json({ success: true, data: response });
+    }catch(error){
+        console.error('Error in handleUpsertCustomer:', error);
+        return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
-    return res.status(200).json({ success: true, data: response });
 }
 
 exports.handleDeleteAgent = async (req, res) => {
@@ -84,4 +96,22 @@ exports.handleDeleteAgent = async (req, res) => {
     }
 }
 
+exports.agentscount = async (req,res)=>{
+    try{
+        let response;
+        if(req.userType == 'Admin'){
+            [response] = await db.execute('SELECT COUNT(*) AS count FROM agents');
+        }else{
+            [response] = await db.execute('SELECT COUNT(*) AS count FROM agents where user_id = ?',[req.userID]);
+        }
+        
+        if (response.length === 0) {
+            return res.status(404).json({ success: false, message: 'No agents found.' });
+        }
+        return res.status(200).json({ success: true, data: response[0].count });
+    }catch(error){
+        console.error('Error in handleUpsertCustomer:', error);
+        return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+    }
+}
 

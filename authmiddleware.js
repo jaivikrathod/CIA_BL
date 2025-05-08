@@ -13,6 +13,15 @@ exports.validateUser = async (req, res, next) => {
         if (rows.length == 0) {
             return res.json({ success: false, message: 'Invalid token or user ID.' });
         }
+
+        const [userRows] = await db.query('SELECT type FROM users WHERE id = ?', [userId]);
+        if (userRows.length === 0) {
+            return res.json({ success: false, message: 'User not found.' });
+        }
+        
+        req.userType = userRows[0].type;
+        req.userID = userId;
+        
         next();
     } catch (err) {
         console.error('Error during token validation:', err);

@@ -82,6 +82,8 @@ const agentAddEditController = require('./Agent/AgentManagement');
 router.post('/agent-create-edit', protectedRouter, agentAddEditController.handleAddEditAgent);
 router.get('/agent-list', protectedRouter, agentAddEditController.listAgents);
 router.post('/agent-delete', protectedRouter, agentAddEditController.handleDeleteAgent);
+router.get('/getAgentCounts', protectedRouter, agentAddEditController.agentscount);
+
 
 
 module.exports = router;
