@@ -70,8 +70,8 @@ exports.uploadInsuranceDocument = (req, res) => {
                 type: document_type,
             };
         
-            const existingDocumentQuery = `SELECT documents FROM ${table} WHERE id = ?`;
-            const [result] = await db.execute(existingDocumentQuery, [customer_id]);
+            const existingDocumentQuery = `SELECT documents FROM ${table} WHERE insurance_id = ? order by insurance_count desc LIMIT 1`;
+            const [result] = await db.execute(existingDocumentQuery, [customer_id]);            
         
             let documentsArray = [];
         

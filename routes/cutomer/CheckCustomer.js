@@ -20,19 +20,7 @@ exports.CheckCustomer = async (req, res) => {
                 message: 'No customer found with this email.',
             });
         }
-        try {
-            const common_id = uuidv4();
-            const [response] = await db.query('INSERT INTO insurance_details (customer_id, common_id,is_latest) VALUES(?, ?,1)', [customers[0].id,common_id]);
-            const InsertedID = response.insertId;
-            if(InsertedID){    
-                return res.json({ success: true,id:InsertedID, message: 'Insurance created successfully.' });
-            }else{
-                return res.json({ success: false, message: 'Failed to create insurance.'});
-            }
-        } catch (error) {
-            console.error('Error in listCustomer:', error);
-            return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
-        }
+        return res.json({ success: true,id:customers[0].id, message: 'Insurance created successfully.' });
 
     } catch (error) {
         console.error('Error in CheckCustomer:', error);

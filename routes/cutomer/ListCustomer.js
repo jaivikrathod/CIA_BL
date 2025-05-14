@@ -2,7 +2,7 @@ const db = require('../../config/db');
 
 exports.listCustomers = async (req, res) => {
     try {
-        const { search, gender, minAge, maxAge, page = 1, limit = 10 } = req.body;
+        const { search, gender,admin, minAge, maxAge, page = 1, limit = 10 } = req.body;
         // const adminType = req.headers['admintype'];
 
         const offset = (page - 1) * limit;
@@ -42,6 +42,12 @@ exports.listCustomers = async (req, res) => {
             const maxAgeDate = new Date(currentYear - minAge, currentMonth, currentDay);
             query += ' AND dob BETWEEN ? AND ?';
             params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
+        }
+
+        if(admin && admin.trim() !==''){
+            console.log(admin);
+            query += ' AND user_id = ?';
+            params.push(admin);
         }
 
         if(limit==0){
