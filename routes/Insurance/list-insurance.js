@@ -3,7 +3,7 @@ const db = require('../../config/db');
 // List Insurance - only latest insurance per insurance_id
 exports.listInsurance = async (req, res) => {
     try {
-        const { search, segment, minAge, maxAge, page = 1, limit = 10,admin } = req.body;
+        let { search, segment, minAge, maxAge, page = 1, limit = 10,admin } = req.body;
         const offset = (page - 1) * limit;
         const limitPlusOne = limit + 1;
 
@@ -60,7 +60,11 @@ exports.listInsurance = async (req, res) => {
         }
         
         // Add Admin filter if provided
-        if (admin && admin.trim() !== '') {
+        if(req.userType != 'Admin') {
+            query += ' AND icd.user_id = ?';
+            params.push(req.userID);
+        }
+        else if (admin && admin.trim() !== '') {
             query += ' AND icd.user_id = ?';
             params.push(admin);
         }

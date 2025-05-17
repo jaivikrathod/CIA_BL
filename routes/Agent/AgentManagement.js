@@ -32,7 +32,7 @@ exports.handleAddEditAgent = async (req, res) => {
         if (!id) {
             response = await db.execute(`
             INSERT INTO agents (full_name, email, primary_mobile,user_id)
-            VALUES (?, ?, ?)
+            VALUES (?, ?, ?,?)
         `, [ full_name, email, primary_mobile,req.userID]);
         } else {
             response = await db.execute(`
