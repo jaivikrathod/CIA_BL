@@ -8,7 +8,7 @@ const JWT_EXPIRES_IN = '24h';
 exports.handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        let changePassword = false;
         // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).json({ success: false, message: 'Email and password are required.' });
@@ -23,6 +23,8 @@ exports.handleLogin = async (req, res) => {
         }
 
         const user = results[0];
+
+        password === "Passwd@123" ? changePassword = true : changePassword = false; 
 
         // Compare the provided password with the stored hash
         const isMatch = await bcrypt.compare(password, user.password);
@@ -54,6 +56,7 @@ exports.handleLogin = async (req, res) => {
             token: token,
             full_name: user.full_name,
             type: user.type,
+            changePassword
         });
 
     } catch (err) {

@@ -6,12 +6,15 @@ const loginController = require('./login');
 const signupController = require('./signup');
 const tokenController = require('./verifyToken');
 const changePass = require('./changePass');
-
+const forgetPass = require('./forgetPass')
+const verifyOTP = require('./verifyOTP');
 const validateUser = require('../authmiddleware');
 protectedRouter.use(validateUser.validateUser);
 
 // ==================== Auth Routes ====================
 router.post('/login', loginController.handleLogin);
+router.post('/forgot-password',forgetPass.forgetPass );
+router.post('/verify-otp', verifyOTP.verifyOTP);
 router.post('/signup', signupController.handleSignup);
 router.post('/change-password/:id', changePass.changePass);
 router.post('/verify-token', protectedRouter, tokenController.handleTokenVerification);
