@@ -10,6 +10,9 @@ exports.listCustomers = async (req, res) => {
 
         let query = 'SELECT * FROM customer WHERE 1=1';
         const params = [];
+
+            query += ' AND is_active = 1';
+
         
         // Add user_id filter for non-admin users
         if (req.userType !== 'Admin') {

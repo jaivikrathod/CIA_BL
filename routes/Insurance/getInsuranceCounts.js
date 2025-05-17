@@ -3,7 +3,13 @@ const db = require('../../config/db');
 
 exports.getInsuranceCounts = async (req, res) => {
     try {
-        const [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details');
+        let InsuranceCounts;
+        
+        if(req.userType == 'Admin') {
+            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details');
+        }else{
+            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details where user_id = ?', [req.userID]);
+        }
         if (InsuranceCounts.length === 0) {
             return res.status(404).json({ success: false, message: 'No insurance details found.' });
         }
