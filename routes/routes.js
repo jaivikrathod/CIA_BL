@@ -29,6 +29,8 @@ router.post('/user-create-edit', userAddEditController.handleAddEditUser);
 router.post('/user-delete', protectedRouter, userDeleteController.handleDeleteUser);
 router.post('/user-list', protectedRouter, userListController.listUsers);
 router.get('/getUsersCounts', protectedRouter, getUsersCounts.getUsersCounts);
+router.get('/particular-user-detail', protectedRouter, userListController.getParticularUserDetails);
+router.post('/update-particular-user', protectedRouter, userListController.updateParticularUserDetails);
 
 // ==================== Customer Management ====================
 const customerAddEditController = require('./cutomer/AddEditCustomer');
