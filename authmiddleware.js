@@ -24,7 +24,6 @@ exports.validateUser = async (req, res, next) => {
         
         next();
     } catch (err) {
-        console.error('Error during token validation:', err);
         return res.json({ success: false, message: 'An internal server error occurred.' });
     }
     

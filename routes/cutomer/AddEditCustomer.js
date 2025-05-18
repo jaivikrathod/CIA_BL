@@ -57,7 +57,6 @@ exports.handleAddEditCustomer = async (req, res) => {
         return res.status(200).json({ success: true, message: id ? 'Customer updated successfully.' : 'New customer created successfully.' });
 
     } catch (error) {
-        console.error('Error in handleUpsertCustomer:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 };

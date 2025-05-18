@@ -23,7 +23,6 @@ exports.CheckCustomer = async (req, res) => {
         return res.json({ success: true,id:customers[0].id, message: 'Insurance created successfully.' });
 
     } catch (error) {
-        console.error('Error in CheckCustomer:', error);
         return res.status(500).json({
             success: false,
             message: 'An internal server error occurred.',

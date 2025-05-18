@@ -6,9 +6,9 @@ const getCustomerCounts = async (req, res) => {
         let CustomerCounts;
 
         if(req.userType == 'Admin') {
-             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer');
+             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer where is_active = 1');
         }else{
-             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer where user_id = ?', [req.userID]);
+             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer where user_id = ? AND is_active=1', [req.userID]);
         }
         
         return res.status(200).json({ success: true, data: CustomerCounts[0].count });
@@ -23,9 +23,9 @@ const getNewCustomerCounts = async (req, res) => {
     try {
         let CustomerCounts;
         if(req.userType == 'Admin') {
-             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer WHERE created_at >= NOW() - INTERVAL 5 DAY');
+             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer WHERE created_at >= NOW() - INTERVAL 5 DAY AND is_active = 1');
         }else{
-             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer WHERE user_id = ? AND created_at >= NOW() - INTERVAL 5 DAY', [req.userID]);
+             [CustomerCounts] = await db.execute('SELECT COUNT(*) AS count FROM customer WHERE user_id = ? AND created_at >= NOW() - INTERVAL 5 DAY AND is_active=1', [req.userID]);
         }        
         return res.status(200).json({ success: true, data: CustomerCounts[0].count });
     } catch (error) {

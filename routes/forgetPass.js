@@ -25,7 +25,6 @@ exports.forgetPass = async (req, res) => {
         return res.status(200).json({ success: true, message: 'OTP sent to your email.' });
 
     } catch (err) {
-        console.error("forgetPass Error:", err);
         return res.status(500).json({ success: false, message: 'An internal error occurred.', error: err.message });
     }
 }
@@ -61,7 +60,6 @@ async function sendEmailOtp(reciverEmail) {
                 },
             });
         } catch (transportError) {
-            console.error("Transporter creation failed:", transportError);
             return { success: false, message: 'Failed to create email transporter.' };
         }
 
@@ -76,12 +74,10 @@ async function sendEmailOtp(reciverEmail) {
             await transporter.sendMail(mailOptions);
             return { success: true };
         } catch (mailError) {
-            console.error("Email sending failed:", mailError);
             return { success: false, message: 'Failed to send OTP email.' };
         }
 
     } catch (err) {
-        console.error("sendEmailOtp Error:", err);
         return { success: false, message: 'An unexpected error occurred while sending OTP.' };
     }
 }

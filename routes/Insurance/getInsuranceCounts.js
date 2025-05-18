@@ -6,9 +6,9 @@ exports.getInsuranceCounts = async (req, res) => {
         let InsuranceCounts;
         
         if(req.userType == 'Admin') {
-            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details');
+            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details where is_active = 1');
         }else{
-            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details where user_id = ?', [req.userID]);
+            [InsuranceCounts] = await db.execute('SELECT COUNT(*) AS count FROM insurance_common_details where user_id = ? AND is_active =1', [req.userID]);
         }
         if (InsuranceCounts.length === 0) {
             return res.status(404).json({ success: false, message: 'No insurance details found.' });

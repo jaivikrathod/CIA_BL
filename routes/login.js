@@ -15,7 +15,7 @@ exports.handleLogin = async (req, res) => {
         }
 
         // Fetch user from the database
-        const query = 'SELECT * FROM users WHERE email = ?';
+        const query = 'SELECT * FROM users WHERE email = ? AND is_active = 1';
         const [results] = await db.query(query, [email]);
 
         if (results.length === 0) {
@@ -61,6 +61,6 @@ exports.handleLogin = async (req, res) => {
 
     } catch (err) {
         console.error(err); // Log error for debugging purposes
-        return res.status(500).json({ success: true, message: 'An error occurred during login.', error: err.message });
+        return res.status(500).json({ success: false, message: 'An error occurred during login.', error: err });
     }
 };

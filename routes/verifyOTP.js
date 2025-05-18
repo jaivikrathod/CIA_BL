@@ -31,7 +31,6 @@ exports.verifyOTP = async (req, res) => {
         return res.status(200).json({ success: true, id: result[0].id, message: 'OTP verified successfully.' });
 
     } catch (error) {
-        console.error("verifyOTP Error:", error);
         return res.status(500).json({ success: false, message: 'An internal error occurred.', error: error.message });
     }
 }

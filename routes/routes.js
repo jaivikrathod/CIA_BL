@@ -60,7 +60,7 @@ const getParticularInsurance = require('./Insurance/list-insurance');
 const CreateInsurance = require('./Insurance/createInsurance');
 const getStep = require('./Insurance/getInsuranceCounts');
 const getInsuranceCommonDetail = require('./Insurance/common-vehical');
-
+const getInitialInsuranceStatus = require('./Insurance/getInitialInsuranceStatus');
 
 
 router.get('/getInsuranceCounts', protectedRouter, getInsuranceCounts.getInsuranceCounts);
@@ -75,6 +75,7 @@ router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedo
 router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon);
 
 router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);
+router.get('/getInitialInsuranceStatus',protectedRouter, getInitialInsuranceStatus.getInitialInsuranceStatus);
 
 // ==================== Document Uploads ====================
 const uploadDocument = require('./upload_documents/uploadDocument');

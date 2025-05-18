@@ -54,7 +54,6 @@ exports.handleAddEditAgent = async (req, res) => {
         return res.status(200).json({ success: true, message: id ? 'Customer updated successfully.' : 'New customer created successfully.', data: response });
 
     } catch (error) {
-        console.error('Error in handleUpsertCustomer:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 };
@@ -64,9 +63,9 @@ exports.listAgents = async (req, res) => {
     try{
         let response;
         if(req.userType == 'Admin'){
-            [response] = await db.execute('SELECT * FROM agents');
+            [response] = await db.execute('SELECT * FROM agents where is_active = 1');
         }else{
-            [response] = await db.execute('SELECT * FROM agents where user_id = ?',[req.userID]);
+            [response] = await db.execute('SELECT * FROM agents where user_id = ? AND is_active = 1',[req.userID]);
         }
         
         if (response.length === 0) {
@@ -74,7 +73,6 @@ exports.listAgents = async (req, res) => {
         }
         return res.status(200).json({ success: true, data: response });
     }catch(error){
-        console.error('Error in handleUpsertCustomer:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 }
@@ -84,14 +82,13 @@ exports.handleDeleteAgent = async (req, res) => {
         const { id } = req.body;
         if (!id) {
             return res.status(400).json({ success: false, message: 'Agent ID is required.' });
-    }
-    const [response] = await db.execute('DELETE FROM agents WHERE id = ?', [id]);
-    if (response.affectedRows === 0) {
-        return res.status(404).json({ success: false, message: 'Agent not found.' });
-    }
-    return res.status(200).json({ success: true, message: 'Agent deleted successfully.' });
-} catch (error) {
-        console.error('Error in handleDeleteAgent:', error);
+        }
+        const [response] = await db.execute('UPDATE agents SET is_active = 0 WHERE id = ?', [id]);
+        if (response.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Agent not found.' });
+        }
+        return res.status(200).json({ success: true, message: 'Agent deactivated successfully.' });
+    } catch (error) {
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 }
@@ -110,7 +107,6 @@ exports.agentscount = async (req,res)=>{
         }
         return res.status(200).json({ success: true, data: response[0].count });
     }catch(error){
-        console.error('Error in handleUpsertCustomer:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 }
