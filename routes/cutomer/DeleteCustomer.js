@@ -15,6 +15,9 @@ exports.handleDeleteCustomer = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Customer not found.' });
         }
 
+        const response = await db.execute('UPDATE insurance_common_details SET is_active = 0 WHERE customer_id = ?', [id]);
+        
+
         return res.status(200).json({ success: true, message: 'Customer deactivated successfully.' });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });

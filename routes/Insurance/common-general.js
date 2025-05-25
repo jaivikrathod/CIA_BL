@@ -31,6 +31,13 @@ exports.generalCommon = async (req, res) => {
       common_id
     } = req.body;
 
+    let customer_id = null;
+
+    const [customer] = await db.execute('SELECT customer_id FROM insurance_common_details WHERE id = ?', [id]);
+    if (customer.length > 0) {
+      customer_id = customer[0].customer_id;
+    }
+
     let insurance_count=1;
     if(common_id){
          const [count] = await db.execute('select COUNT(*) as count from insurance_details where common_id = ?', [common_id]);
@@ -44,6 +51,7 @@ exports.generalCommon = async (req, res) => {
       (
         idv,
         user_id,
+        customer_id,
         common_id,  
         insurance_id,
         currentncb,

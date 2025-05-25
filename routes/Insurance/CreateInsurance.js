@@ -61,7 +61,7 @@ exports.RenewInsurance = async (req, res) => {
         dataToInsert.payout_percent = PAYOUTPERCCENT;
         dataToInsert.amount = AMMOUNT;
         dataToInsert.tds = TDS;
-        dataToInsert.is_latest = 1; // Ensure new entry is marked as latest
+        dataToInsert.is_latest = 1; 
 
         // 5. Insert new record with updated values
         const [response] = await db.query(

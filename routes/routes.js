@@ -61,7 +61,7 @@ const CreateInsurance = require('./Insurance/createInsurance');
 const getStep = require('./Insurance/getInsuranceCounts');
 const getInsuranceCommonDetail = require('./Insurance/common-vehical');
 const getInitialInsuranceStatus = require('./Insurance/getInitialInsuranceStatus');
-
+const getInsuranceReports = require('./Insurance/insuranceReports');
 
 router.get('/getInsuranceCounts', protectedRouter, getInsuranceCounts.getInsuranceCounts);
 router.post('/fill-initial-details', protectedRouter, FillInitialDetail.InitialDetails);
@@ -76,6 +76,9 @@ router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.
 
 router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);
 router.get('/getInitialInsuranceStatus',protectedRouter, getInitialInsuranceStatus.getInitialInsuranceStatus);
+
+router.get('/get-insurance-report',protectedRouter,getInsuranceReports.getInsuranceReports);
+router.get('/get-insurance-category-report',protectedRouter,getInsuranceReports.getInsuranceCategoryReports);
 
 // ==================== Document Uploads ====================
 const uploadDocument = require('./upload_documents/uploadDocument');
