@@ -1,14 +1,12 @@
 const db = require('../../config/db');
+const ResponseHandler = require('../../utils/responseHandler');
 
 exports.handleAddEditCustomer = async (req, res) => {
     try {
         const { id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address } = req.body;
 
         if (!full_name || !email || !primary_mobile || !gender || !dob || !state || !city || !full_address) {
-            return res.status(400).json({
-                success: false,
-                message: 'Full name, email, primary mobile, gender, state, city, and full address are required.'
-            });
+            return ResponseHandler.validationError(res, 'Full name, email, primary mobile, gender, state, city, and full address are required.');
         }
 
         const user_id = req.headers['x-user-id'];
@@ -20,10 +18,7 @@ exports.handleAddEditCustomer = async (req, res) => {
         );
 
         if (check.length > 0) {
-            return res.json({
-                success: false,
-                message: 'Email or primary mobile already exists.'
-            });
+            return ResponseHandler.conflict(res, 'Email or primary mobile already exists.');
         }
 
         let response = '';
@@ -51,12 +46,13 @@ exports.handleAddEditCustomer = async (req, res) => {
         }
 
         if (response.affectedRows === 0) {
-            return res.status(500).json({ success: false, message: 'Failed to add or update customer.' });
+            return ResponseHandler.error(res, 500, 'Failed to add or update customer.');
         }
 
-        return res.status(200).json({ success: true, message: id ? 'Customer updated successfully.' : 'New customer created successfully.' });
+        return id ? ResponseHandler.updated(res, 'Customer updated successfully.') : ResponseHandler.created(res, 'New customer created successfully.');
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+        return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
     }
 };
+

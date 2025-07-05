@@ -17,8 +17,6 @@ exports.getInsuranceReports = async (req, res) => {
         const startDate = new Date(currentYear - 1, 4, 1); // May of previous year
         const endDate = new Date(currentYear, currentMonth - 1, 0); // Last day of previous month
       
-        console.log(startDate);
-        console.log(endDate);
         
         // SQL query to get monthly insurance counts
         const query = `

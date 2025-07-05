@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const ResponseHandler = require('../../utils/responseHandler');
 
 // List Insurance - only latest insurance per insurance_id
 exports.listInsurance = async (req, res) => {
@@ -101,15 +102,10 @@ exports.listInsurance = async (req, res) => {
         }
 
         if (insurance.length === 0) {
-            return res.status(200).json({
-                success: true,
-                message: 'No insurance records found.',
-                data: [],
-                pagination: {
-                    page,
-                    limit,
-                    isMoreData: false
-                }
+            return ResponseHandler.emptyList(res, 'No insurance records found.', {
+                page,
+                limit,
+                isMoreData: false
             });
         }
 
@@ -127,22 +123,15 @@ exports.listInsurance = async (req, res) => {
             }
         });
 
-        return res.status(200).json({
-            success: true,
-            data: insurance,
-            pagination: {
-                page,
-                limit,
-                isMoreData
-            }
-        });
+        return ResponseHandler.list(res, insurance, {
+            page,
+            limit,
+            isMoreData
+        }, 'Insurance records retrieved successfully');
 
     } catch (error) {
         console.error('Error while fetching insurance details:', error);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Error while fetching insurance details: ' + error.message 
-        });
+        return ResponseHandler.error(res, 500, 'Error while fetching insurance details.', error);
     }
 };
 
@@ -152,10 +141,7 @@ exports.getParticularInsurance = async (req, res) => {
         const { common_id } = req.query;
 
         if (!common_id) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'common_id is required' 
-            });
+            return ResponseHandler.validationError(res, 'common_id is required');
         }
 
         const [insurance] = await db.execute(`
@@ -166,7 +152,8 @@ exports.getParticularInsurance = async (req, res) => {
                 icd.segment,
                 icd.vehicle_number,
                 icd.insurance_type,
-                icd.segment_detail_type,
+                icd.segment_vehicle_type,
+                icd.segment_vehicle_detail_type,
                 icd.model,
                 icd.manufacturer,
                 icd.fuel_type,
@@ -184,19 +171,13 @@ exports.getParticularInsurance = async (req, res) => {
         
 
         if (insurance.length === 0) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No insurance found for this common_id' 
-            });
+            return ResponseHandler.notFound(res, 'No insurance found for this common_id');
         }
 
-        return res.json({ success: true, data: insurance });
+        return ResponseHandler.success(res, 200, 'Insurance details retrieved successfully', insurance);
 
     } catch (error) {
         console.error('Error while fetching particular insurance details:', error);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Error while fetching particular insurance details: ' + error.message 
-        });
+        return ResponseHandler.error(res, 500, 'Error while fetching particular insurance details.', error);
     }
 };

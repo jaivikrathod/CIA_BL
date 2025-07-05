@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const ResponseHandler = require('../../utils/responseHandler');
 
 exports.listCustomers = async (req, res) => {
     try {
@@ -73,15 +74,10 @@ exports.listCustomers = async (req, res) => {
         }
 
         if (customers.length === 0) {
-            return res.status(200).json({
-                success: true,
-                message: 'No customers found.',
-                data: [],
-                pagination: {
-                    page,
-                    limit,
-                    isMoreData: false
-                }
+            return ResponseHandler.emptyList(res, 'No customers found.', {
+                page,
+                limit,
+                isMoreData: false
             });
         }
 
@@ -99,18 +95,14 @@ exports.listCustomers = async (req, res) => {
             }
         });
 
-        return res.status(200).json({
-            success: true,
-            data: customers,
-            pagination: {
-                page,
-                limit,
-                isMoreData
-            }
-        });
+        return ResponseHandler.list(res, customers, {
+            page,
+            limit,
+            isMoreData
+        }, 'Customers retrieved successfully');
 
     } catch (error) {
         console.error('Error in listCustomers:', error);
-        return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+        return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
     }
 };

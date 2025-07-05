@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const ResponseHandler = require('../utils/responseHandler');
 
 const JWT_SECRET = 'gameover';
 const JWT_EXPIRES_IN = '24h';
@@ -11,7 +12,7 @@ exports.handleLogin = async (req, res) => {
         let changePassword = false;
         // Check if email and password are provided
         if (!email || !password) {
-            return res.status(400).json({ success: false, message: 'Email and password are required.' });
+            return ResponseHandler.validationError(res, 'Email and password are required.');
         }
 
         // Fetch user from the database
@@ -19,7 +20,7 @@ exports.handleLogin = async (req, res) => {
         const [results] = await db.query(query, [email]);
 
         if (results.length === 0) {
-            return res.status(404).json({ success: false, message: 'User not found.' });
+            return ResponseHandler.notFound(res, 'User not found.');
         }
 
         const user = results[0];
@@ -29,7 +30,7 @@ exports.handleLogin = async (req, res) => {
         // Compare the provided password with the stored hash
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.json({ success: false, message: 'Incorrect password.' });
+            return ResponseHandler.unauthorized(res, 'Incorrect password.');
         }
 
         // Generate JWT token
@@ -49,9 +50,7 @@ exports.handleLogin = async (req, res) => {
         await db.query(insertOrUpdateTokenQuery, [user.id, token]);
 
         // Return success response
-        return res.status(200).json({
-            success: true,
-            message: 'Login successful.',
+        return ResponseHandler.success(res, 200, 'Login successful.', {
             id: user.id,
             token: token,
             full_name: user.full_name,
@@ -61,6 +60,6 @@ exports.handleLogin = async (req, res) => {
 
     } catch (err) {
         console.error(err); // Log error for debugging purposes
-        return res.status(500).json({ success: false, message: 'An error occurred during login.', error: err });
+        return ResponseHandler.error(res, 500, 'An error occurred during login.', err);
     }
 };
