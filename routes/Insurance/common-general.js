@@ -1,11 +1,8 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const { v4: uuidv4 } = require('uuid');
-
 
 exports.generalCommon = async (req, res) => {
   try {
-
-
     let {
       IDV,
       CURRENTNCB,
@@ -32,91 +29,53 @@ exports.generalCommon = async (req, res) => {
     } = req.body;
 
     let customer_id = null;
-
-    const [customer] = await db.execute('SELECT customer_id FROM insurance_common_details WHERE id = ?', [id]);
-    if (customer.length > 0) {
-      customer_id = customer[0].customer_id;
+    const customer = await db.insurance_common_details.findOne({ where: { id } });
+    if (customer) {
+      customer_id = customer.customer_id;
     }
 
-    let insurance_count=1;
-    if(common_id){
-         const [count] = await db.execute('select COUNT(*) as count from insurance_details where common_id = ?', [common_id]);
-         insurance_count = count[0].count + 1;
-
-    }else{
+    let insurance_count = 1;
+    if (common_id) {
+      const count = await db.insurance_details.count({ where: { common_id } });
+      insurance_count = count + 1;
+    } else {
       common_id = uuidv4();
     }
-    const sql = `
-      INSERT INTO insurance_details
-      (
-        idv,
-        user_id,
-        customer_id,
-        common_id,  
-        insurance_id,
-        currentncb,
-        insurance_company,
-        policy_no,
-        od_premium,
-        tp_premium,
-        package_premium,
-        gst,
-        premium,
-        collection_date,
-        case_type,
-        exe_name,
-        payment_mode,
-        policy_start_date,
-        policy_expiry_date,
-        agent_code,
-        payout_percent,
-        amount,
-        tds,
-        insurance_count
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
 
-    const values = [
-      IDV,
-      userID,
-      common_id,
-      customer_id,
-      id,
-      CURRENTNCB,
-      INSURANCE,
-      POLICYNO,
-      ODPREMIUM,
-      TPPREMIUM,
-      PACKAGEPREMIUM,
-      GST,
-      PREMIUM,
-      COLLECTIONDATE,
-      CASESTYPE,
-      EXENAME,
-      PAYMENTMODE,
-      NEWPOLICYSTARTDATE,
-      NEWPOLICYEXPIRYDATE,
-      AGNTCODE,
-      PAYOUTPERCCENT,
-      AMMOUNT,
-      TDS,
-      insurance_count
-    ];
-    // Use db.execute() to execute the query
-    const [results] = await db.execute(sql, values);
+    const insuranceDetails = await db.insurance_details.create({
+      idv: IDV,
+      user_id: userID,
+      common_id: common_id,
+      customer_id: customer_id,
+      insurance_id: id,
+      currentncb: CURRENTNCB,
+      insurance_company: INSURANCE,
+      policy_no: POLICYNO,
+      od_premium: ODPREMIUM,
+      tp_premium: TPPREMIUM,
+      package_premium: PACKAGEPREMIUM,
+      gst: GST,
+      premium: PREMIUM,
+      collection_date: COLLECTIONDATE,
+      case_type: CASESTYPE,
+      exe_name: EXENAME,
+      payment_mode: PAYMENTMODE,
+      policy_start_date: NEWPOLICYSTARTDATE,
+      policy_expiry_date: NEWPOLICYEXPIRYDATE,
+      agent_code: AGNTCODE,
+      payout_percent: PAYOUTPERCCENT,
+      amount: AMMOUNT,
+      tds: TDS,
+      insurance_count: insurance_count
+    });
 
-    if (results.affectedRows > 0) {
-      // Successfully inserted
-      console.log("Insurance details inserted successfully:", results.insertId);
-      return res.json({ success: true, id: results.insertId,message:'Insurance details inserted successfully'});
-    }
-    else {
-      // Insertion failed
+    if (insuranceDetails && insuranceDetails.id) {
+      console.log("Insurance details inserted successfully:", insuranceDetails.id);
+      return res.json({ success: true, id: insuranceDetails.id, message: 'Insurance details inserted successfully' });
+    } else {
       console.log("Failed to insert insurance details.");
-      return res.json({ success: false,message:'Failed to insert insurance details.'});
+      return res.json({ success: false, message: 'Failed to insert insurance details.' });
     }
-
   } catch (error) {
     console.error('Unexpected error:', error);
     res.status(500).json({ message: false });

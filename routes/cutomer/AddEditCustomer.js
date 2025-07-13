@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const ResponseHandler = require('../../utils/responseHandler');
 
 exports.handleAddEditCustomer = async (req, res) => {
@@ -11,45 +11,63 @@ exports.handleAddEditCustomer = async (req, res) => {
 
         const user_id = req.headers['x-user-id'];
         // Check if the email or primary mobile already exists in the database
-
-        const [check] = await db.query(
-            'SELECT 1 FROM customer WHERE (email = ? OR primary_mobile = ?) AND id != ? LIMIT 1',
-            [email, primary_mobile, id || 0]
-        );
-
-        if (check.length > 0) {
+        const check = await db.customers.findOne({
+            where: {
+                [db.Sequelize.Op.or]: [
+                    { email },
+                    { primary_mobile }
+                ],
+                id: { [db.Sequelize.Op.ne]: id || 0 }
+            }
+        });
+        if (check) {
             return ResponseHandler.conflict(res, 'Email or primary mobile already exists.');
         }
 
-        let response = '';
-
+        let response;
+        let customerId;
         if (!id) {
-            response = await db.execute(`
-            INSERT INTO customer (user_id,full_name, email, primary_mobile, additional_mobile, dob, gender, state, city,full_address,documents)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
-        `, [user_id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address,'']);
+            response = await db.customers.create({
+                user_id,
+                full_name,
+                email,
+                primary_mobile,
+                additional_mobile,
+                dob,
+                gender,
+                state,
+                city,
+                full_address,
+                documents: ''
+            });
+            customerId = response.id;
         } else {
-            response = await db.execute(`
-                UPDATE customer SET 
-                  full_name = ?, 
-                  email = ?, 
-                  primary_mobile = ?, 
-                  additional_mobile = ?, 
-                  dob = ?, 
-                  gender = ?, 
-                  state = ?, 
-                  city = ?, 
-                  full_address = ?
-                WHERE id = ?
-              `, [full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address, id]);
-              
+            response = await db.customers.update({
+                full_name,
+                email,
+                primary_mobile,
+                additional_mobile,
+                dob,
+                gender,
+                state,
+                city,
+                full_address
+            }, {
+                where: { id }
+            });
+            customerId = id;
         }
 
-        if (response.affectedRows === 0) {
+        if ((Array.isArray(response) && response[0] === 0) || (!Array.isArray(response) && !response)) {
             return ResponseHandler.error(res, 500, 'Failed to add or update customer.');
         }
 
-        return id ? ResponseHandler.updated(res, 'Customer updated successfully.') : ResponseHandler.created(res, 'New customer created successfully.');
+        // Fetch the created or updated customer
+        const customerData = await db.customers.findByPk(customerId);
+
+        return id 
+            ? ResponseHandler.updated(res,'Customer updated successfully.', customerData,{'isUpdate':true}) 
+            : ResponseHandler.created(res,'New customer created successfully.', customerData,{'isUpdate':false});
 
     } catch (error) {
         return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);

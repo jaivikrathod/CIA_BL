@@ -1,12 +1,11 @@
-const db = require('../../config/db');
+const db = require('../../models');
 
 exports.vehicalCommon = async (req, res) => {
   try {
-    const { user_id, vehicle_number, manufacturer, model, yom, fuel_type, id } = req.body;
-
+    let { user_id, vehicle_number, manufacturer, model, yom, fuel_type, id } = req.body;
 
     if (!user_id) {
-      user_id = req.userID
+      user_id = req.userID;
     }
     // Validate the incoming data
     if (!vehicle_number || !manufacturer || !model || !yom || !fuel_type || !user_id || !id) {
@@ -16,17 +15,19 @@ exports.vehicalCommon = async (req, res) => {
 
     const id2 = parseInt(id, 10); // Convert id to integer
 
-    const query = `
-      UPDATE insurance_common_details
-      SET user_id=?,vehicle_number = ?, manufacturer = ?, model = ?, yom = ?, fuel_type = ? 
-      WHERE id = ?`;
+    const [affectedRows] = await db.insurance_common_details.update(
+      {
+        user_id,
+        vehicle_number,
+        manufacturer,
+        model,
+        yom,
+        fuel_type
+      },
+      { where: { id: id2 } }
+    );
 
-    const values = [user_id, vehicle_number, manufacturer, model, yom, fuel_type, id2];
-
-    // Use db.execute() to run the query
-    const [results] = await db.execute(query, values);
-
-    if (results.affectedRows === 0) {
+    if (affectedRows === 0) {
       console.log("No rows were updated. Check if the ID exists.");
       return res.status(404).json({ message: 'No matching record found' });
     }
@@ -50,26 +51,19 @@ exports.getvehicalCommon = async (req, res) => {
       });
     }
     console.log(id);
-    const query = `
-            SELECT *
-            FROM insurance_common_details 
-            WHERE id = ?
-        `;
 
-    const [insurance] = await db.execute(query, [id]);
+    const insurance = await db.insurance_common_details.findOne({ where: { id } });
 
-
-    if (insurance.length === 0) {
+    if (!insurance) {
       return res.status(404).json({
         success: false,
         message: 'Insurance details not found'
       });
     }
 
-
     return res.status(200).json({
       success: true,
-      data: insurance[0]
+      data: insurance
     });
 
   } catch (error) {

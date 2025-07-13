@@ -1,4 +1,4 @@
-const db = require('../../config/db');  
+const db = require('../../models');  
 const { v4: uuidv4 } = require('uuid');
 
 exports.CheckCustomer = async (req, res) => {
@@ -12,15 +12,15 @@ exports.CheckCustomer = async (req, res) => {
     }
 
     try {
-        const [customers] = await db.execute('SELECT * FROM customer WHERE email = ?', [email]);
+        const customer = await db.customers.findOne({ where: { email } });
 
-        if (customers.length === 0) {
+        if (!customer) {
             return res.json({
                 success: false,
                 message: 'No customer found with this email.',
             });
         }
-        return res.json({ success: true,id:customers[0].id, message: 'Insurance created successfully.' });
+        return res.json({ success: true, id: customer.id, message: 'Insurance created successfully.' });
 
     } catch (error) {
         return res.status(500).json({

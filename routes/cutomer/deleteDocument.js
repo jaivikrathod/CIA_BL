@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const db = require('../../config/db');
+const db = require('../../models');
 
 exports.deleteDocument = async (req, res) => {
     try {
@@ -10,10 +10,9 @@ exports.deleteDocument = async (req, res) => {
         }
 
         // Fetch customer data
-        const customerQuery = 'SELECT documents FROM customer WHERE id = ?';
-        const [selectedCustomer] = await db.execute(customerQuery, [selectedID]);
+        const selectedCustomer = await db.customers.findByPk(selectedID);
 
-        if (selectedCustomer.length <= 0) {
+        if (!selectedCustomer) {
             return res.status(404).json({ success: false, message: 'Customer not found.' });
         }
 
@@ -21,10 +20,19 @@ exports.deleteDocument = async (req, res) => {
         const filePath = path.join(__dirname, `../../${folderName}`, document);
 
         // Remove the document from database
-        const documents = JSON.parse(selectedCustomer[0].documents);
+        let documents = [];
+        if (selectedCustomer.documents) {
+            try {
+                documents = JSON.parse(selectedCustomer.documents);
+            } catch (e) {
+                documents = [];
+            }
+        }
         const updatedDocuments = documents.filter(doc => doc.name !== document);
-        const updateQuery = 'UPDATE customer SET documents = ? WHERE id = ?';
-        await db.execute(updateQuery, [JSON.stringify(updatedDocuments), selectedID]);
+        await db.customers.update(
+            { documents: JSON.stringify(updatedDocuments) },
+            { where: { id: selectedID } }
+        );
 
         // Check if file exists before attempting to delete it
         if (fs.existsSync(filePath)) {

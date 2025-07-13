@@ -1,38 +1,39 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const ResponseHandler = require('../../utils/responseHandler');
+const { Op } = require('sequelize');
 
 exports.listCustomers = async (req, res) => {
     try {
-        const { search, gender,admin, minAge, maxAge, page = 1, limit = 10 } = req.body;
-        // const adminType = req.headers['admintype'];
-
+        const { search, gender, admin, minAge, maxAge, page = 1, limit = 10 } = req.body;
         const offset = (page - 1) * limit;
         const limitPlusOne = limit + 1;
 
-        let query = 'SELECT * FROM customer WHERE 1=1';
-        const params = [];
+        // Build dynamic where clause
+        let where = { is_active: 1 };
 
-            query += ' AND is_active = 1';
-
-        
         // Add user_id filter for non-admin users
         if (req.userType !== 'Admin') {
             const user_id = req.headers['x-user-id'];
-            query += ' AND user_id = ?';
-            params.push(user_id);
+            where.user_id = user_id;
         }
 
         // Add search filter if provided
         if (search && search.trim() !== '') {
-            query += ' AND (full_name LIKE ? OR email LIKE ? OR primary_mobile LIKE ? OR additional_mobile LIKE ? OR state LIKE ? OR city LIKE ? OR full_address LIKE ?)';
             const searchPattern = `%${search}%`;
-            params.push(searchPattern, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern);
+            where[Op.or] = [
+                { full_name: { [Op.like]: searchPattern } },
+                { email: { [Op.like]: searchPattern } },
+                { primary_mobile: { [Op.like]: searchPattern } },
+                { additional_mobile: { [Op.like]: searchPattern } },
+                { state: { [Op.like]: searchPattern } },
+                { city: { [Op.like]: searchPattern } },
+                { full_address: { [Op.like]: searchPattern } }
+            ];
         }
 
         // Add gender filter if provided
         if (gender && gender.trim() !== '') {
-            query += ' AND gender = ?';
-            params.push(gender);
+            where.gender = gender;
         }
 
         // Add age range filter if provided
@@ -41,39 +42,36 @@ exports.listCustomers = async (req, res) => {
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth();
             const currentDay = currentDate.getDate();
-
             const minAgeDate = new Date(currentYear - maxAge, currentMonth, currentDay);
             const maxAgeDate = new Date(currentYear - minAge, currentMonth, currentDay);
-            query += ' AND dob BETWEEN ? AND ?';
-            params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
+            where.dob = { [Op.between]: [minAgeDate, maxAgeDate] };
         }
 
-        if(admin && admin.trim() !==''){
-            console.log(admin);
-            query += ' AND user_id = ?';
-            params.push(admin);
+        if (admin && admin.trim() !== '') {
+            where.user_id = admin;
         }
 
-        if(limit==0){
-            // Add pagination (fetch one extra record)
-            query += ' ORDER BY id DESC';
-        }else{
-            query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
-            params.push(limitPlusOne, offset);
+        // Query options
+        let queryOptions = {
+            where,
+            order: [['id', 'DESC']]
+        };
+        if (limit !== 0) {
+            queryOptions.limit = limitPlusOne;
+            queryOptions.offset = offset;
         }
 
-        console.log('Final Query:', query);
-        console.log('Query Parameters:', params);
-
-        const [customers] = await db.execute(query, params);
+        // Fetch customers
+        const customers = await db.customers.findAll(queryOptions);
 
         let isMoreData = false;
-        if (customers.length > limit) {
+        let result = customers;
+        if (limit !== 0 && customers.length > limit) {
             isMoreData = true;
-            customers.pop(); // Remove the extra record
+            result = customers.slice(0, limit);
         }
 
-        if (customers.length === 0) {
+        if (result.length === 0) {
             return ResponseHandler.emptyList(res, 'No customers found.', {
                 page,
                 limit,
@@ -81,21 +79,24 @@ exports.listCustomers = async (req, res) => {
             });
         }
 
-        // Format DOB and calculate age
-        customers.forEach(customer => {
-            if (customer.dob && !isNaN(new Date(customer.dob).getTime())) {
-                const dobDate = new Date(customer.dob);
-                customer.dob = dobDate.toISOString().split('T')[0];
-                const diff = Date.now() - dobDate.getTime();
-                const ageDate = new Date(diff);
-                customer.age = Math.abs(ageDate.getUTCFullYear() - 1970);
-            } else {
-                customer.dob = null;
-                customer.age = null;
-            }
-        });
+        // // Format DOB and calculate age
+        // result.forEach(customer => {
+            
+        //     if (customer.dob && !isNaN(new Date(customer.dob).getTime())) {
+        //         const dobDate = new Date(customer.dob);
+        //         customer.dob = dobDate.toISOString().split('T')[0];
+        //         const diff = Date.now() - dobDate.getTime();
+        //         const ageDate = new Date(diff);
+        //         customer.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                
+        //     } else {
+        //         customer.dob = null;
+        //         customer.age = null;
+        //     }
+        // });
 
-        return ResponseHandler.list(res, customers, {
+        
+        return ResponseHandler.list(res, result, {
             page,
             limit,
             isMoreData

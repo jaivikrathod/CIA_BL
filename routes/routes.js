@@ -96,6 +96,11 @@ router.get('/agent-list', protectedRouter, agentAddEditController.listAgents);
 router.post('/agent-delete', protectedRouter, agentAddEditController.handleDeleteAgent);
 router.get('/getAgentCounts', protectedRouter, agentAddEditController.agentscount);
 
-
+const CarController = require('./Car/CarController');
+router.post('/car', CarController.createCar);
+router.get('/cars', CarController.getCars);
+router.get('/car/:id', CarController.getCarById);
+router.put('/car', CarController.updateCar);
+router.delete('/car', CarController.deleteCar);
 
 module.exports = router;

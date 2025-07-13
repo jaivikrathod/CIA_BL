@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const ResponseHandler = require('../utils/responseHandler');
@@ -16,16 +16,12 @@ exports.handleLogin = async (req, res) => {
         }
 
         // Fetch user from the database
-        const query = 'SELECT * FROM users WHERE email = ? AND is_active = 1';
-        const [results] = await db.query(query, [email]);
-
-        if (results.length === 0) {
+        const user = await db.users.findOne({ where: { email, is_active: 1 } });
+        if (!user) {
             return ResponseHandler.notFound(res, 'User not found.');
         }
 
-        const user = results[0];
-
-        password === "Passwd@123" ? changePassword = true : changePassword = false; 
+        password === "Passwd@123" ? changePassword = true : changePassword = false;
 
         // Compare the provided password with the stored hash
         const isMatch = await bcrypt.compare(password, user.password);
@@ -41,13 +37,7 @@ exports.handleLogin = async (req, res) => {
         );
 
         // Insert or update token in the database
-        const insertOrUpdateTokenQuery = `
-            INSERT INTO token (user_id, token)
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE token = VALUES(token)
-        `;
-
-        await db.query(insertOrUpdateTokenQuery, [user.id, token]);
+        await db.tokens.upsert({ user_id: user.id, token });
 
         // Return success response
         return ResponseHandler.success(res, 200, 'Login successful.', {

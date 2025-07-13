@@ -1,6 +1,6 @@
-const { response } = require('express');
-const db = require('../../config/db');
 const ResponseHandler = require('../../utils/responseHandler');
+const { Op } = require('sequelize');
+const db = require('../../models');
 
 exports.handleAddEditAgent = async (req, res) => {
     try {
@@ -10,67 +10,69 @@ exports.handleAddEditAgent = async (req, res) => {
             return ResponseHandler.validationError(res, 'Full name, email and primary mobile required.');
         }
 
-        // const user_id = req.headers['x-user-id'];
         // Check if the email or primary mobile already exists in the database
+        const check = await db.agents.findOne({
+            where: {
+                [Op.or]: [
+                    { email },
+                    { primary_mobile }
+                ],
+                id: { [Op.ne]: id || 0 }
+            }
+        });
 
-        const [check] = await db.query(
-            'SELECT 1 FROM agents WHERE (email = ? OR primary_mobile = ?) AND id != ? LIMIT 1',
-            [email, primary_mobile, id || 0]
-        );
-
-        if (check.length > 0) {
+        if (check) {
             return ResponseHandler.conflict(res, 'Email or primary mobile already exists.');
         }
 
-        let response = '';
-
+        let agent;
         if (!id) {
-            response = await db.execute(`
-            INSERT INTO agents (full_name, email, primary_mobile,user_id)
-            VALUES (?, ?, ?,?)
-        `, [ full_name, email, primary_mobile,req.userID]);
+            agent = await db.agents.create({
+                full_name,
+                email,
+                primary_mobile,
+                user_id: req.userID,
+                is_active: 1
+            });
+            if (!agent) {
+                return ResponseHandler.error(res, 500, 'Failed to add agent.');
+            }
+            return ResponseHandler.created(res, 'New agent created successfully.');
         } else {
-            response = await db.execute(`
-                UPDATE agents SET 
-                  full_name = ?, 
-                  email = ?, 
-                  primary_mobile = ?
-                  user_id = ?
-                WHERE id = ?
-              `, [full_name, email, primary_mobile,req.userID, id]);
-              
+            const [updatedRows] = await db.agents.update({
+                full_name,
+                email,
+                primary_mobile,
+                user_id: req.userID
+            }, {
+                where: { id }
+            });
+            if (updatedRows === 0) {
+                return ResponseHandler.error(res, 500, 'Failed to update agent.');
+            }
+            return ResponseHandler.updated(res, 'Agent updated successfully.');
         }
+    } catch (error) {
+        return ResponseHandler.error(res, 500, 'An internal server error occurred.'+ error);
+    }
+};
 
-        
-        if (response.affectedRows === 0) {
-            return ResponseHandler.error(res, 500, 'Failed to add or update agent.');
+exports.listAgents = async (req, res) => {
+    try {
+        let agents;
+        if (req.admintype === 'Admin') {
+            agents = await db.agents.findAll({ where: { is_active: 1 } });
+        } else {
+            agents = await db.agents.findAll({ where: { user_id: req.userID, is_active: 1 } });
         }
-
-        return id ? ResponseHandler.updated(res, 'Agent updated successfully.') : ResponseHandler.created(res, 'New agent created successfully.');
-
+        if (!agents || agents.length === 0) {
+            return res.status(404).json({ success: false, message: 'No agents found.' });
+        }
+        return res.status(200).json({ success: true, data: agents });
     } catch (error) {
         return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
     }
 };
-
-
-exports.listAgents = async (req, res) => {
-    try{
-        let response;
-        if(req.userType == 'Admin'){
-            [response] = await db.execute('SELECT * FROM agents where is_active = 1');
-        }else{
-            [response] = await db.execute('SELECT * FROM agents where user_id = ? AND is_active = 1',[req.userID]);
-        }
-        
-        if (response.length === 0) {
-            return res.status(404).json({ success: false, message: 'No agents found.' });
-        }
-        return res.status(200).json({ success: true, data: response });
-    }catch(error){
-        return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
-    }
-}
 
 exports.handleDeleteAgent = async (req, res) => {
     try {
@@ -78,31 +80,27 @@ exports.handleDeleteAgent = async (req, res) => {
         if (!id) {
             return res.status(400).json({ success: false, message: 'Agent ID is required.' });
         }
-        const [response] = await db.execute('UPDATE agents SET is_active = 0 WHERE id = ?', [id]);
-        if (response.affectedRows === 0) {
+        const [updatedRows] = await db.agents.update({ is_active: 0 }, { where: { id } });
+        if (updatedRows === 0) {
             return res.status(404).json({ success: false, message: 'Agent not found.' });
         }
         return res.status(200).json({ success: true, message: 'Agent deactivated successfully.' });
     } catch (error) {
         return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
     }
-}
+};
 
-exports.agentscount = async (req,res)=>{
-    try{
-        let response;
-        if(req.userType == 'Admin'){
-            [response] = await db.execute('SELECT COUNT(*) AS count FROM agents');
-        }else{
-            [response] = await db.execute('SELECT COUNT(*) AS count FROM agents where user_id = ?',[req.userID]);
+exports.agentscount = async (req, res) => {
+    try {
+        let count;
+        if (req.userType === 'Admin') {
+            count = await db.agents.count({ where: { is_active: 1 } });
+        } else {
+            count = await db.agents.count({ where: { user_id: req.userID, is_active: 1 } });
         }
-        
-        if (response.length === 0) {
-            return res.status(404).json({ success: false, message: 'No agents found.' });
-        }
-        return res.status(200).json({ success: true, data: response[0].count });
-    }catch(error){
+        return res.status(200).json({ success: true, data: count });
+    } catch (error) {
         return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
     }
-}
+};
 

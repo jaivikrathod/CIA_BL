@@ -1,23 +1,19 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const { v4: uuidv4 } = require('uuid');
 
-
 exports.RenewInsurance = async (req, res) => {
-
     try {
-        const [existingData] = await db.query(
-            'SELECT * FROM insurance_details WHERE is_latest = 1 AND insurance_id = ?',
-            [req.body.id]
-        );
+        const existingData = await db.insurance_details.findOne({
+            where: { is_latest: 1, insurance_id: req.body.id }
+        });
 
-        if (existingData.length === 0) {
+        if (!existingData) {
             return res.json({ success: false, message: 'Insurance ID not found.' });
         }
 
-        let dataToInsert = { ...existingData[0] };
+        let dataToInsert = existingData.toJSON();
         delete dataToInsert.id;
         delete dataToInsert.insurance_date;
-
 
         const {
             IDV,
@@ -41,7 +37,6 @@ exports.RenewInsurance = async (req, res) => {
             TDS
         } = req.body;
 
-        // 4. Update dataToInsert with new values
         dataToInsert.idv = IDV;
         dataToInsert.currentncb = CURRENTNCB;
         dataToInsert.insurance_company = INSURANCE;
@@ -61,20 +56,17 @@ exports.RenewInsurance = async (req, res) => {
         dataToInsert.payout_percent = PAYOUTPERCCENT;
         dataToInsert.amount = AMMOUNT;
         dataToInsert.tds = TDS;
-        dataToInsert.is_latest = 1; 
+        dataToInsert.is_latest = 1;
 
-        // 5. Insert new record with updated values
-        const [response] = await db.query(
-            'INSERT INTO insurance_details SET ?',
-            [dataToInsert]
-        );
+        const response = await db.insurance_details.create(dataToInsert);
 
-        if (response?.insertId) {
-            const check = await db.query(
-                'UPDATE insurance_details SET is_latest = 0 WHERE id = ?',
-                [req.body.id]);
-            if (check && check.affectedRows > 0) {
-                return res.json({ success: true, id: InsertedID, message: 'Insurance Renewed successfully.' });
+        if (response && response.id) {
+            const check = await db.insurance_details.update(
+                { is_latest: 0 },
+                { where: { id: req.body.id } }
+            );
+            if (check && check[0] > 0) {
+                return res.json({ success: true, id: response.id, message: 'Insurance Renewed successfully.' });
             } else {
                 return res.json({ success: false, message: 'Failed to Renew insurance.' });
             }
@@ -87,14 +79,15 @@ exports.RenewInsurance = async (req, res) => {
     }
 }
 
-
 exports.CreateInsurance = async (req, res) => {
     try {
         const common_id = uuidv4();
-        const [response] = await db.query('INSERT INTO insurance_details (customer_id, common_id) VALUES(?, ?)', [req.body.customerID, common_id]);
-        const InsertedID = response.insertId;
-        if (InsertedID) {
-            return res.json({ success: true, id: InsertedID, message: 'Insurance created successfully.' });
+        const response = await db.insurance_details.create({
+            customer_id: req.body.customerID,
+            common_id: common_id
+        });
+        if (response && response.id) {
+            return res.json({ success: true, id: response.id, message: 'Insurance created successfully.' });
         } else {
             return res.json({ success: false, message: 'Failed to create insurance.' });
         }

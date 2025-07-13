@@ -1,10 +1,14 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const ResponseHandler = require('../../utils/responseHandler'); 
-
 
 exports.listUsers = async (req, res) => {
     try {
-        const [Users] = await db.execute('SELECT * FROM users where id != ? AND is_active',[req.userID,1]);
+        const Users = await db.users.findAll({
+            where: {
+                id: { [db.Sequelize.Op.ne]: req.userID },
+                is_active: 1
+            }
+        });
         return ResponseHandler.success(res, 200, 'Users retrieved successfully', Users);
     } catch (error) {
         console.error('Error in listUsers:', error);
@@ -20,13 +24,13 @@ exports.getParticularUserDetails = async (req, res) => {
       return ResponseHandler.validationError(res, 'User ID is required.');
     }
 
-    const [userDetails] = await db.execute('SELECT * FROM users WHERE id = ?', [user_id]);
+    const userDetails = await db.users.findOne({ where: { id: user_id } });
 
-    if (userDetails.length === 0) {
+    if (!userDetails) {
       return ResponseHandler.notFound(res, 'User not found.');
     }
 
-    return ResponseHandler.success(res, 200, 'User details retrieved successfully', userDetails[0]);
+    return ResponseHandler.success(res, 200, 'User details retrieved successfully', userDetails);
 
   }catch(error){
     console.error('Error in getParticularUserDetails:', error);
@@ -42,15 +46,12 @@ exports.updateParticularUserDetails = async (req, res) => {
             return ResponseHandler.validationError(res, 'Full name, email and mobile are required.');
         }
 
-        const updateQuery = `
-            UPDATE users 
-            SET full_name = ?, email = ?, mobile = ?
-            WHERE id = ?
-        `;
+        const [affectedRows] = await db.users.update(
+            { full_name, email, mobile },
+            { where: { id } }
+        );
 
-        const [response] = await db.execute(updateQuery, [full_name, email, mobile, id]);
-
-        if(response.affectedRows === 0) {
+        if(affectedRows === 0) {
             return ResponseHandler.notFound(res, 'User not found.');
         }
         

@@ -1,6 +1,5 @@
-const db = require('../../config/db');
+const db = require('../../models');
 const ResponseHandler = require('../../utils/responseHandler'); 
-
 
 exports.handleDeleteUser = async (req, res) => {
     try {
@@ -9,10 +8,12 @@ exports.handleDeleteUser = async (req, res) => {
             return ResponseHandler.validationError(res, 'User ID is required for deletion.');
         }
 
-        const updateQuery = 'UPDATE users SET is_active = 0 WHERE id = ?';
-        const [updateResult] = await db.execute(updateQuery, [id]);
+        const [affectedRows] = await db.users.update(
+            { is_active: 0 },
+            { where: { id } }
+        );
 
-        if (updateResult.affectedRows === 0) {
+        if (affectedRows === 0) {
             return ResponseHandler.notFound(res, 'User not found.');
         }
 
