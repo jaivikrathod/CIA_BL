@@ -20,149 +20,141 @@ module.exports = (sequelize, DataTypes) => {
   insurance_details.init({
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       autoIncrement: true,
       primaryKey: true
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     customer_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     insurance_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     common_id: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     insurance_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     documents: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     business_type: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     idv: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     currentncb: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     insurance_company: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     policy_no: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     od_premium: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     tp_premium: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     package_premium: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     gst: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     premium: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     collection_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     case_type: {
       type: DataTypes.STRING(30),
-      allowNull: false
-    },
-    exe_name: {
-      type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: true
     },
     payment_mode: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     policy_start_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     policy_expiry_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
-    agent_code: {
+    agent_id: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: true
     },
     payout_percent: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     amount: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     tds: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     tds_amount: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     payment_amount: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     difference: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    final_agent: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     net_income: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     payment_received: {
       type: DataTypes.TINYINT,
-      allowNull: false
+      allowNull: true
     },
     insurance_count: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     step: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     is_active: {
       type: DataTypes.TINYINT,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 1
     }
   }, {

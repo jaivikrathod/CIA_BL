@@ -38,7 +38,6 @@ exports.getCarById = async (req, res) => {
 
 exports.updateCar = async (req, res) => {
   try {
-    return ResponseHandler.validationError(res, 'Car ID is required for update.');
     const { id } = req.body;
     const { company_name, type, model_name, model_launch_year, other_detail } = req.body;
     if (!id) {

@@ -25,7 +25,8 @@ module.exports = {
         type: Sequelize.DATE
       },
       documents: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
       },
       business_type: {
         type: Sequelize.STRING
@@ -63,9 +64,6 @@ module.exports = {
       case_type: {
         type: Sequelize.STRING
       },
-      exe_name: {
-        type: Sequelize.STRING
-      },
       payment_mode: {
         type: Sequelize.INTEGER
       },
@@ -75,7 +73,7 @@ module.exports = {
       policy_expiry_date: {
         type: Sequelize.DATE
       },
-      agent_code: {
+      agent_id: {
         type: Sequelize.STRING
       },
       payout_percent: {
@@ -94,9 +92,6 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       difference: {
-        type: Sequelize.INTEGER
-      },
-      final_agent: {
         type: Sequelize.INTEGER
       },
       net_income: {

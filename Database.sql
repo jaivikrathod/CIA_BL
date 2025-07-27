@@ -70,14 +70,14 @@ CREATE TABLE `customer` (
   `state` varchar(50) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `update_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`, `user_id`, `documents`, `full_name`, `gender`, `dob`, `email`, `primary_mobile`, `additional_mobile`, `full_address`, `city`, `state`, `is_active`, `created_at`, `update_at`) VALUES
+INSERT INTO `customer` (`id`, `user_id`, `documents`, `full_name`, `gender`, `dob`, `email`, `primary_mobile`, `additional_mobile`, `full_address`, `city`, `state`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 8, '', 'David Wise', 'male', '1988-04-12', 'user1@example.com', '9931229533', '8683906185', '49918 Brenda Bridge, West Alan, TN 62254', 'Torresborough', 'Louisiana', 0, '2025-05-05 22:31:50', '2025-05-18 16:25:52'),
 (2, 9, '', 'Roberto Evans', 'male', '1995-08-17', 'user2@example.com', '9182572099', '8923681436', '12731 Shane Views Suite 544, Johnsonborough, MO 91104', 'Jeffreyland', 'Maryland', 1, '2025-05-05 22:31:50', '2025-05-17 23:31:29'),
 (3, 10, '', 'Catherine Carr', 'female', '2003-01-24', 'user3@example.com', '9907161204', '8714324740', '98253 Edward Plaza, Michaelchester, NM 84861', 'Tamaramouth', 'Rhode Island', 1, '2025-05-05 22:31:50', '2025-05-17 23:31:29'),

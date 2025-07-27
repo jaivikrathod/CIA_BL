@@ -27,7 +27,6 @@ exports.RenewInsurance = async (req, res) => {
             PREMIUM,
             COLLECTIONDATE,
             CASESTYPE,
-            EXENAME,
             PAYMENTMODE,
             NEWPOLICYSTARTDATE,
             NEWPOLICYEXPIRYDATE,
@@ -48,11 +47,10 @@ exports.RenewInsurance = async (req, res) => {
         dataToInsert.premium = PREMIUM;
         dataToInsert.collection_date = COLLECTIONDATE;
         dataToInsert.case_type = CASESTYPE;
-        dataToInsert.exe_name = EXENAME;
         dataToInsert.payment_mode = PAYMENTMODE;
         dataToInsert.policy_start_date = NEWPOLICYSTARTDATE;
         dataToInsert.policy_expiry_date = NEWPOLICYEXPIRYDATE;
-        dataToInsert.agent_code = AGNTCODE;
+        dataToInsert.agent_id = AGNTCODE;
         dataToInsert.payout_percent = PAYOUTPERCCENT;
         dataToInsert.amount = AMMOUNT;
         dataToInsert.tds = TDS;

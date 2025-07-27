@@ -19,7 +19,7 @@ module.exports = {
         state: 'Louisiana',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-18 16:25:52',
+        updated_at: '2025-05-18 16:25:52',
       },
       {
         id: 2,
@@ -36,7 +36,7 @@ module.exports = {
         state: 'Maryland',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 3,
@@ -53,7 +53,7 @@ module.exports = {
         state: 'Rhode Island',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 4,
@@ -70,7 +70,7 @@ module.exports = {
         state: 'Massachusetts',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-07-05 20:12:29',
+        updated_at: '2025-07-05 20:12:29',
       },
       {
         id: 5,
@@ -87,7 +87,7 @@ module.exports = {
         state: 'Connecticut',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 6,
@@ -104,7 +104,7 @@ module.exports = {
         state: 'New York',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 7,
@@ -121,7 +121,7 @@ module.exports = {
         state: 'Idaho',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 8,
@@ -138,7 +138,7 @@ module.exports = {
         state: 'West Virginia',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 9,
@@ -155,7 +155,7 @@ module.exports = {
         state: 'Utah',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 10,
@@ -172,7 +172,7 @@ module.exports = {
         state: 'Georgia',
         is_active: 1,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-17 23:31:29',
+        updated_at: '2025-05-17 23:31:29',
       },
       {
         id: 11,
@@ -189,7 +189,7 @@ module.exports = {
         state: 'New Mexico',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 12,
@@ -206,7 +206,7 @@ module.exports = {
         state: 'Idaho',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 14,
@@ -223,7 +223,7 @@ module.exports = {
         state: 'Hawaii',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 15,
@@ -240,7 +240,7 @@ module.exports = {
         state: 'Washington',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 16,
@@ -257,7 +257,7 @@ module.exports = {
         state: 'Massachusetts',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 17,
@@ -274,7 +274,7 @@ module.exports = {
         state: 'Illinois',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 18,
@@ -291,7 +291,7 @@ module.exports = {
         state: 'Oklahoma',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 19,
@@ -308,7 +308,7 @@ module.exports = {
         state: 'New Mexico',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 20,
@@ -325,7 +325,7 @@ module.exports = {
         state: 'Louisiana',
         is_active: 0,
         created_at: '2025-05-05 22:31:50',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 21,
@@ -342,7 +342,7 @@ module.exports = {
         state: 'Gujarat',
         is_active: 0,
         created_at: '2025-05-05 23:53:21',
-        update_at: '2025-05-11 13:16:15',
+        updated_at: '2025-05-11 13:16:15',
       },
       {
         id: 22,
@@ -359,7 +359,7 @@ module.exports = {
         state: 'gujrat',
         is_active: 0,
         created_at: '2025-05-05 23:55:29',
-        update_at: '2025-05-05 23:55:29',
+        updated_at: '2025-05-05 23:55:29',
       },
       {
         id: 23,
@@ -376,7 +376,7 @@ module.exports = {
         state: 'we',
         is_active: 1,
         created_at: '2025-07-05 19:55:00',
-        update_at: '2025-07-05 19:55:00',
+        updated_at: '2025-07-05 19:55:00',
       },
       {
         id: 24,
@@ -393,7 +393,7 @@ module.exports = {
         state: 'w',
         is_active: 1,
         created_at: '2025-07-05 20:02:10',
-        update_at: '2025-07-05 21:10:11',
+        updated_at: '2025-07-05 21:10:11',
       },
       {
         id: 25,
@@ -410,7 +410,7 @@ module.exports = {
         state: 'dfkch',
         is_active: 1,
         created_at: '2025-07-05 22:21:58',
-        update_at: '2025-07-05 22:21:58',
+        updated_at: '2025-07-05 22:21:58',
       },
     ], {});
   },

@@ -79,23 +79,6 @@ exports.listCustomers = async (req, res) => {
             });
         }
 
-        // // Format DOB and calculate age
-        // result.forEach(customer => {
-            
-        //     if (customer.dob && !isNaN(new Date(customer.dob).getTime())) {
-        //         const dobDate = new Date(customer.dob);
-        //         customer.dob = dobDate.toISOString().split('T')[0];
-        //         const diff = Date.now() - dobDate.getTime();
-        //         const ageDate = new Date(diff);
-        //         customer.age = Math.abs(ageDate.getUTCFullYear() - 1970);
-                
-        //     } else {
-        //         customer.dob = null;
-        //         customer.age = null;
-        //     }
-        // });
-
-        
         return ResponseHandler.list(res, result, {
             page,
             limit,
@@ -103,7 +86,6 @@ exports.listCustomers = async (req, res) => {
         }, 'Customers retrieved successfully');
 
     } catch (error) {
-        console.error('Error in listCustomers:', error);
-        return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
+        return ResponseHandler.error(res, 500,  error);
     }
 };

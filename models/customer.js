@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(10)
     },
     dob: {
-      type: DataTypes.DATE
+      type: DataTypes.DATEONLY
     },
     email: {
       type: DataTypes.STRING(100)
@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
     timestamps: true,
     created_at: 'created_at',
-    updated_att: 'update_at'
+    updated_at: 'updated_at'
   });
   return customer;
 }; 

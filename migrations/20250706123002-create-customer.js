@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       dob: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       email: {
         type: Sequelize.STRING
@@ -50,7 +50,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      update_at: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

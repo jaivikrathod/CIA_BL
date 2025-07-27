@@ -70,7 +70,7 @@ exports.handleAddEditCustomer = async (req, res) => {
             : ResponseHandler.created(res,'New customer created successfully.', customerData,{'isUpdate':false});
 
     } catch (error) {
-        return ResponseHandler.error(res, 500, 'An internal server error occurred.', error);
+        return ResponseHandler.error(res, 500, 'An internal server error occurred:-'+ error);
     }
 };
 

@@ -71,6 +71,7 @@ router.post('/insurance-list', protectedRouter, ListInsuranceDetail.listInsuranc
 router.post('/create-insurance', protectedRouter, CreateInsurance.CreateInsurance);
 router.post('/renew-insurance', protectedRouter, CreateInsurance.RenewInsurance);
 router.get('/particular-insurance', protectedRouter, getParticularInsurance.getParticularInsurance);
+router.get('/particular-insurance-document',protectedRouter,getParticularInsurance.getParticularInsuranceDocuments);
 router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedocument);
 router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon);
 
@@ -79,6 +80,16 @@ router.get('/getInitialInsuranceStatus',protectedRouter, getInitialInsuranceStat
 
 router.get('/get-insurance-report',protectedRouter,getInsuranceReports.getInsuranceReports);
 router.get('/get-insurance-category-report',protectedRouter,getInsuranceReports.getInsuranceCategoryReports);
+
+
+// ==================== Insurance Company Management ====================
+const insuranceCompanyController = require('./Insurance/insurance-company');
+
+router.post('/insurance-company', protectedRouter, insuranceCompanyController.createInsuranceCompany);
+router.get('/insurance-companies', protectedRouter, insuranceCompanyController.listInsuranceCompanies);
+router.get('/insurance-company/:id', protectedRouter, insuranceCompanyController.getInsuranceCompanyById);
+router.put('/insurance-company', protectedRouter, insuranceCompanyController.updateInsuranceCompany);
+router.delete('/insurance-company', protectedRouter, insuranceCompanyController.deleteInsuranceCompany);
 
 // ==================== Document Uploads ====================
 const uploadDocument = require('./upload_documents/uploadDocument');
