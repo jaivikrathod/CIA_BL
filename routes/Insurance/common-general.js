@@ -70,8 +70,13 @@ exports.generalCommon = async (req, res) => {
       payout_percent: payout_percent,
       amount: amount,
       tds: tds,
-      insurance_count: insurance_count
+      insurance_count: insurance_count,
     });
+
+    await db.insurance_common_details.update(
+      { status: 1 },
+      { where: { id: insurance_id } }
+    );
 
     if (insuranceDetails && insuranceDetails.id) {
       console.log("Insurance details inserted successfully:", insuranceDetails.id);

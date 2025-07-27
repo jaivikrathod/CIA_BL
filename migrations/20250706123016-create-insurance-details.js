@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       insurance_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       documents: {
         type: Sequelize.STRING,
@@ -59,19 +59,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       collection_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       case_type: {
         type: Sequelize.STRING
       },
       payment_mode: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       policy_start_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       policy_expiry_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       agent_id: {
         type: Sequelize.STRING

@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     insurance_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true
     },
     documents: {
@@ -89,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     collection_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true
     },
     case_type: {
@@ -97,15 +97,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     payment_mode: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(10),
       allowNull: true
     },
     policy_start_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true
     },
     policy_expiry_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true
     },
     agent_id: {

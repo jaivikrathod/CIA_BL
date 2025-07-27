@@ -342,6 +342,15 @@ exports.listInsurance = async (req, res) => {
 //     }
 // };
 
+
+function formatDateOnly(date) {
+    if (!date) return null;
+    if (date instanceof Date) {
+      return date.toISOString().split('T')[0];
+    }
+    return date.split('T')[0];
+  }
+
 exports.getParticularInsurance = async (req, res) => {
     try {
         const { common_id } = req.query;
@@ -364,12 +373,16 @@ exports.getParticularInsurance = async (req, res) => {
                 icd.model,
                 icd.manufacturer,
                 icd.fuel_type,
-                icd.yom
+                icd.yom,
+                us.full_name
             FROM 
                 insurance_details idt
             JOIN 
                 insurance_common_details icd 
                 ON icd.id = idt.insurance_id
+            JOIN 
+                users us
+                ON us.id = idt.user_id
             WHERE 
                 idt.common_id = ?
             ORDER BY 
@@ -384,7 +397,15 @@ exports.getParticularInsurance = async (req, res) => {
             });
         }
 
-        return res.json({ success: true, data: insurance });
+        const formattedInsurance = insurance.map(row => ({
+            ...row,
+            policy_start_date: formatDateOnly(row.policy_start_date),
+            policy_expiry_date: formatDateOnly(row.policy_expiry_date),
+            insurance_date: formatDateOnly(row.insurance_date),
+            collection_date: formatDateOnly(row.collection_date),
+          }));
+
+        return res.json({ success: true, data: formattedInsurance });
 
     } catch (error) {
         console.error('Error while fetching particular insurance details:', error);
