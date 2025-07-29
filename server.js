@@ -7,7 +7,8 @@ const port = process.env.DB_PORT || 3005;
 const routes = require('./routes/routes');
 // Middleware to enable CORS
 app.use(cors({
-    origin: '*',
+    // origin: '*',
+    origin: 'https://jaivikrathod.github.io/',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization','X-User-ID','adminType']
 }));
