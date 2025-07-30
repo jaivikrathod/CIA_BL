@@ -9,10 +9,10 @@ module.exports = {
   //   dialect: 'mysql'
   // },
     username: 'root',
-    password: 'gHqDquZDbraLJsjrBnTRYqrGUUBcCbWq',
+    password: 'pnKOglqqcqbJauoOjbYBljgxJSSeraZY',
     database: 'railway',
-    host:'shinkansen.proxy.rlwy.net',
-    port:'43550',
+    host:'shortline.proxy.rlwy.net',
+    port:'27438',
     dialect: 'mysql'
   },
   test: {
