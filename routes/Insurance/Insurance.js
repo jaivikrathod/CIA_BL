@@ -95,3 +95,52 @@ exports.CreateInsurance = async (req, res) => {
     }
 };
 
+exports.UpdateInsurance = async (req, res) => {
+    try {
+        const data = req.body.payload;
+        console.log('Received data:', data);
+        console.log('isMotor:', data.isMotor);
+        console.log('insurance_detail_id:', data.insurance_detail_id);
+        console.log('insurance_common_detail_id:', data.insurance_common_detail_id);
+        
+        if (data.isMotor) {
+            const commonUpdateResult = await db.insurance_common_details.update({
+                ...data.motor_details,
+                segment: data.segment
+            }, {
+                where: {
+                    id: data.insurance_common_detail_id
+                }
+            });
+
+        } else {
+
+            const commonUpdateResult = await db.insurance_common_details.update({
+                segment: data.segment
+            }, {
+                where: {
+                    id: data.insurance_common_detail_id
+                }
+            });
+        }
+
+        const detailsUpdateResult = await db.insurance_details.update({
+            ...data.other_details
+        }, {
+            where: {
+                id: data.insurance_detail_id
+            }
+        });
+
+        return res.status(200).json({ 
+            success:  true, 
+            message: 'Insurance details updated successfully' 
+        });
+
+    } catch (error) {
+        return res.status(500).json({ 
+            success: false, 
+            message: 'An internal server error occurred: ' + error.message 
+        });
+    }
+}

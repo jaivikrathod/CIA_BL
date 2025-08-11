@@ -371,6 +371,8 @@ exports.getParticularInsurance = async (req, res) => {
                 icd.vehicle_number,
                 icd.insurance_type,
                 icd.model,
+                icd.segment_vehicle_type,
+                icd.segment_vehicle_detail_type,
                 icd.manufacturer,
                 icd.fuel_type,
                 icd.yom,

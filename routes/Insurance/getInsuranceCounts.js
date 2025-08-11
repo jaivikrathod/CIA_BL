@@ -9,7 +9,7 @@ exports.getInsuranceCounts = async (req, res) => {
             count = await db.insurance_common_details.count({ where: { user_id: req.userID, is_active: 1 } });
         }
         if (count === 0) {
-            return res.status(404).json({ success: false, message: 'No insurance details found.' });
+            return res.status(200).json({ success: false, message: 'No insurance details found.' });
         }
         return res.status(200).json({ success: true, data: count });
     } catch (error) {

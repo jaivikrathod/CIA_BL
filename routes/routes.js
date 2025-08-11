@@ -57,23 +57,27 @@ const CommonVehical = require('./Insurance/common-vehical');
 const CommonGeneral = require('./Insurance/common-general');
 const ListInsuranceDetail = require('./Insurance/list-insurance');
 const getParticularInsurance = require('./Insurance/list-insurance');
-const CreateInsurance = require('./Insurance/CreateInsurance');
+const Insurance = require('./Insurance/Insurance');
 const getStep = require('./Insurance/getInsuranceCounts');
 const getInsuranceCommonDetail = require('./Insurance/common-vehical');
 const getInitialInsuranceStatus = require('./Insurance/getInitialInsuranceStatus');
 const getInsuranceReports = require('./Insurance/insuranceReports');
+const deleteInsuranceDocument = require('./Insurance/deleteDocument');
 
 router.get('/getInsuranceCounts', protectedRouter, getInsuranceCounts.getInsuranceCounts);
 router.post('/fill-initial-details', protectedRouter, FillInitialDetail.InitialDetails);
 router.post('/common-vehical', protectedRouter, CommonVehical.vehicalCommon);
 router.post('/common-general', protectedRouter, CommonGeneral.generalCommon);
 router.post('/insurance-list', protectedRouter, ListInsuranceDetail.listInsurance);
-router.post('/create-insurance', protectedRouter, CreateInsurance.CreateInsurance);
-router.post('/renew-insurance', protectedRouter, CreateInsurance.RenewInsurance);
+router.post('/create-insurance', protectedRouter, Insurance.CreateInsurance);
+router.post('/renew-insurance', protectedRouter, Insurance.RenewInsurance);
+router.post('/update-insurance', protectedRouter, Insurance.UpdateInsurance);
+
 router.get('/particular-insurance', protectedRouter, getParticularInsurance.getParticularInsurance);
 router.get('/particular-insurance-document',protectedRouter,getParticularInsurance.getParticularInsuranceDocuments);
 router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedocument);
 router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon);
+router.post('/delete-insurance-document', protectedRouter, deleteInsuranceDocument.deleteDocument);
 
 router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);
 router.get('/getInitialInsuranceStatus',protectedRouter, getInitialInsuranceStatus.getInitialInsuranceStatus);
@@ -107,11 +111,20 @@ router.get('/agent-list', protectedRouter, agentAddEditController.listAgents);
 router.post('/agent-delete', protectedRouter, agentAddEditController.handleDeleteAgent);
 router.get('/getAgentCounts', protectedRouter, agentAddEditController.agentscount);
 
-const CarController = require('./Car/CarController');
-router.post('/car', CarController.createCar);
-router.get('/cars', CarController.getCars);
-router.get('/car/:id', CarController.getCarById);
-router.put('/car', CarController.updateCar);
-router.delete('/car', CarController.deleteCar);
+const VehicleController = require('./Vehicle/VehicleController');
+
+// Vehicle Company routes
+router.post('/create-vehicle-company', VehicleController.createVehicleCompany);
+router.get('/get-vehicle-companies', VehicleController.getVehicleCompanies);
+router.get('/get-vehicle-company/:id', VehicleController.getVehicleCompanyById);
+router.post('/update-vehicle-company', VehicleController.updateVehicleCompany);
+router.post('/delete-vehicle-company', VehicleController.deleteVehicleCompany);
+
+// Vehicle Model routes
+router.post('/create-vehicle-model', VehicleController.createVehicleModel);
+router.get('/get-vehicle-models', VehicleController.getVehicleModels);
+router.get('/get-vehicle-model/:id', VehicleController.getVehicleModelsById);
+router.post('/update-vehicle-model', VehicleController.updateVehicleModel);
+router.post('/delete-vehicle-model', VehicleController.deleteVehicleModel);
 
 module.exports = router;

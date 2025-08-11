@@ -3,51 +3,39 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class vehicle_model extends Model {
+  class vehicle_company extends Model {
     static associate(models) {
       // define association here
-      vehicle_model.belongsTo(models.vehicle_company, {
+      vehicle_company.hasMany(models.vehicle_model, {
         foreignKey: 'company_id',
-        as: 'company'
+        as: 'vehicleModels'
       });
     }
   }
-  vehicle_model.init({
+  vehicle_company.init({
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
-    company_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    type: {
+    company_name: {
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    model_name: {
-      type: DataTypes.STRING(100),
-      allowNull: false
-    },
-    model_launch_year: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    other_detail: {
-      type: DataTypes.TEXT,
+    extras: {
+      type: DataTypes.STRING(50),
       allowNull: true
     }
   }, {
     sequelize,
-    modelName: 'vehicle_model',
-    tableName: 'vehicle_model',
+    modelName: 'vehicle_company',
+    tableName: 'vehicle_company',
     freezeTableName: true,
     underscored: true,
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   });
-  return vehicle_model;
+  return vehicle_company;
 }; 
