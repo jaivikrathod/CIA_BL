@@ -60,11 +60,11 @@ exports.handleAddEditAgent = async (req, res) => {
 exports.listAgents = async (req, res) => {
     try {
         let agents;
-        if (req.admintype === 'Admin') {
-            agents = await db.agents.findAll({ where: { is_active: 1 } });
-        } else {
-            agents = await db.agents.findAll({ where: { user_id: req.userID, is_active: 1 } });
-        }
+        // if (req.admintype === 'Admin') {
+        agents = await db.agents.findAll({ where: { is_active: 1 } });
+        // } else {
+        //     agents = await db.agents.findAll({ where: { user_id: req.userID, is_active: 1 } });
+        // }
         if (!agents || agents.length === 0) {
             return res.status(404).json({ success: false, message: 'No agents found.' });
         }
