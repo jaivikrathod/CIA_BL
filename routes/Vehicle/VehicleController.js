@@ -49,20 +49,48 @@ exports.getVehicleModels = async (req, res) => {
 
 exports.getVehicleModelsById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const vehicleModel = await db.vehicle_model.findByPk(id, {
+    const { id } = req.query;
+
+    if(!id){
+      return ResponseHandler.error(res, 403, 'Id required');
+    }
+    const vehicleModels = await db.vehicle_model.findAll({
+      where: { company_id: id },
+      attributes: ['model_name'],
+      raw: true 
+    });
+
+    const modelNames = vehicleModels.map(item => item.model_name);
+
+
+    if (!modelNames) {
+      return ResponseHandler.notFound(res, 'Vehicle model not found.');
+    }
+    return ResponseHandler.success(res, 200, 'Vehicle model retrieved successfully.', modelNames);
+  } catch (error) {
+    return ResponseHandler.error(res, 500, 'Failed to retrieve vehicle model: ' + error.message);
+  }
+};
+
+exports.getVehicleModelsByCompanyName = async (req, res) => {
+  try {
+    const { company_name } = req.params;
+    const vehicleModels = await db.vehicle_model.findAll({
       include: [{
         model: db.vehicle_company,
         as: 'company',
-        attributes: ['id', 'company_name']
+        attributes: ['id', 'company_name'],
+        where: {
+          company_name: company_name
+        }
       }]
     });   
-    if (!vehicleModel) {
-      return ResponseHandler.notFound(res, 'Vehicle model not found.');
+    if (!vehicleModels || vehicleModels.length === 0) {
+      return ResponseHandler.notFound(res, 'No vehicle models found for this company.');
     }
-    return ResponseHandler.success(res, 200, 'Vehicle model retrieved successfully.', vehicleModel);
+    return ResponseHandler.success(res, 200, 'Vehicle models retrieved successfully.', vehicleModels);
   } catch (error) {
-    return ResponseHandler.error(res, 500, 'Failed to retrieve vehicle model: ' + error.message);
+    return ResponseHandler.error(res, 500, 'Failed to retrieve vehicle models: ' + error.message);
   }
 };
 
@@ -140,11 +168,6 @@ exports.createVehicleCompany = async (req, res) => {
 exports.getVehicleCompanies = async (req, res) => {
   try {
     const vehicleCompanies = await db.vehicle_company.findAll({ 
-      include: [{
-        model: db.vehicle_model,
-        as: 'vehicleModels',
-        attributes: ['id', 'type', 'model_name', 'model_launch_year']
-      }],
       order: [['id', 'DESC']] 
     });
     return ResponseHandler.success(res, 200, 'Vehicle companies retrieved successfully.', vehicleCompanies);

@@ -123,7 +123,7 @@ router.post('/delete-vehicle-company', VehicleController.deleteVehicleCompany);
 // Vehicle Model routes
 router.post('/create-vehicle-model', VehicleController.createVehicleModel);
 router.get('/get-vehicle-models', VehicleController.getVehicleModels);
-router.get('/get-vehicle-model/:id', VehicleController.getVehicleModelsById);
+router.get('/get-vehicle-modelBycompany', VehicleController.getVehicleModelsById);
 router.post('/update-vehicle-model', VehicleController.updateVehicleModel);
 router.post('/delete-vehicle-model', VehicleController.deleteVehicleModel);
 
