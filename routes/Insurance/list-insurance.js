@@ -160,8 +160,13 @@ const mysql = require('../../config/db');
 exports.listInsurance = async (req, res) => {
     try {
         let { search, segment, minAge, maxAge, page = 1, limit = 10,admin } = req.body;
+        
+        page = Number(page) || 1;
+        limit = Number(limit) || 10;
+
         const offset = (page - 1) * limit;
         const limitPlusOne = limit + 1;
+
 
         let query = `
             SELECT 
@@ -237,11 +242,11 @@ exports.listInsurance = async (req, res) => {
             params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
         }
 
-        if(limit == 0) {
+        if (limit == 0) {
             query += ' ORDER BY icd.id DESC';
         } else {
             query += ' ORDER BY icd.id DESC LIMIT ? OFFSET ?';
-            params.push(limitPlusOne, offset);
+            params.push(Number(limitPlusOne), Number(offset));
         }
 
         console.log('Final Query:', query);
