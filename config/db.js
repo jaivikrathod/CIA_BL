@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise'); // Ensure you are using promise-based c
 require('dotenv').config(); // Load environment variables from .env file
 
 const pool = mysql.createPool({
-    username: 'jaivikrathod',
+    user: 'jaivikrathod',
     password: '9844@Mysql',
     database: 'care_insurance',
     host: 'localhost',
