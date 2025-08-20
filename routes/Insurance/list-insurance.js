@@ -241,12 +241,11 @@ exports.listInsurance = async (req, res) => {
             query += ' AND c.dob BETWEEN ? AND ?';
             params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
         }
-
+        
         if (limit == 0) {
             query += ' ORDER BY icd.id DESC';
         } else {
-            query += ' ORDER BY icd.id DESC LIMIT ? OFFSET ?';
-            params.push(Number(limitPlusOne), Number(offset));
+            query += ` ORDER BY icd.id DESC LIMIT ${Number(limitPlusOne)} OFFSET ${Number(offset)}`;
         }
 
         console.log('Final Query:', query);
