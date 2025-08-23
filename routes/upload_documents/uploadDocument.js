@@ -55,7 +55,7 @@ exports.uploadKycDocument = (req, res) => {
 
         try {
             let folderName = 'customer-uploads';
-            let table = 'customer';
+            let table = 'customers';
             const filePath = path.join(__dirname, `../../${folderName}`, req.file.filename);
             const extention = path.extname(req.file.originalname);
             const newFileName = `${customer_id}_${Date.now()}${extention}`;
