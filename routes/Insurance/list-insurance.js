@@ -191,7 +191,7 @@ exports.listInsurance = async (req, res) => {
                 AND idt.insurance_count = max_counts.max_count
             JOIN customers c 
                 ON icd.customer_id = c.id
-            WHERE 1=1
+            WHERE 1=1 AND c.is_active = 1
         `;
         const params = [];
 
