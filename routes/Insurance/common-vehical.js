@@ -74,3 +74,41 @@ exports.getvehicalCommon = async (req, res) => {
     });
   }
 };
+
+
+exports.getvehicalCommon2 = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Insurance ID is required'
+      });
+    }
+    
+    const insurance = await db.insurance_details.findOne({
+      where: { insurance_id: id },
+      order: [['id', 'DESC']]
+    });
+
+    if (!insurance) {
+      return res.status(404).json({
+        success: false,
+        message: 'Insurance details not found'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: insurance
+    });
+
+  } catch (error) {
+    console.error('Error in getvehicalCommon:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching insurance details'
+    });
+  }
+};

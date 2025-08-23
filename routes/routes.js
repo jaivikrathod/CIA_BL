@@ -31,7 +31,7 @@ router.post('/user-delete', protectedRouter, requireAdmin, userDeleteController.
 router.post('/user-list', protectedRouter, userListController.listUsers);
 router.get('/getUsersCounts', protectedRouter, getUsersCounts.getUsersCounts);
 router.get('/particular-user-detail', protectedRouter, userListController.getParticularUserDetails);
-router.post('/update-particular-user', protectedRouter, userListController.updateParticularUserDetails);
+router.post('/update-particular-user', protectedRouter, requireAdmin,userListController.updateParticularUserDetails);
 
 // ==================== Customer Management ====================
 const customerAddEditController = require('./cutomer/AddEditCustomer');
@@ -78,6 +78,7 @@ router.get('/particular-insurance', protectedRouter, getParticularInsurance.getP
 router.get('/particular-insurance-document',protectedRouter,getParticularInsurance.getParticularInsuranceDocuments);
 router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedocument);
 router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon);
+router.get('/get-common-insurance2/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon2);
 router.post('/delete-insurance-document', protectedRouter, deleteInsuranceDocument.deleteDocument);
 
 router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);

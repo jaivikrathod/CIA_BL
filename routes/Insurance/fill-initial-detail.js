@@ -12,11 +12,6 @@ exports.InitialDetails = async (req, res) => {
                     segment: data.segment,
                     segment_vehicle_type: data.segment_vehicle_type,
                     segment_vehicle_detail_type: data.segment_vehicle_detail_type,
-                    vehicle_number: null,
-                    model: null,
-                    manufacturer: null,
-                    fuel_type: null,
-                    yom: null,
                     customer_id: data.customer_id
                 },
                 { where: { id: data.id } }
