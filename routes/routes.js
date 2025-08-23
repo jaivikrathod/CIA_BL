@@ -9,6 +9,7 @@ const changePass = require('./changePass');
 const forgetPass = require('./forgetPass')
 const verifyOTP = require('./verifyOTP');
 const validateUser = require('../authmiddleware');
+const { requireAdmin } = require('../adminmiddleware');
 protectedRouter.use(validateUser.validateUser);
 
 // ==================== Auth Routes ====================
@@ -25,8 +26,8 @@ const userAddEditController = require('./User/AddEditUser');
 const userDeleteController = require('./User/DeleteUser');
 const getUsersCounts = require('./User/getUsersCounts');
 
-router.post('/user-create-edit', userAddEditController.handleAddEditUser);
-router.post('/user-delete', protectedRouter, userDeleteController.handleDeleteUser);
+router.post('/user-create-edit',protectedRouter,requireAdmin, userAddEditController.handleAddEditUser);
+router.post('/user-delete', protectedRouter, requireAdmin, userDeleteController.handleDeleteUser);
 router.post('/user-list', protectedRouter, userListController.listUsers);
 router.get('/getUsersCounts', protectedRouter, getUsersCounts.getUsersCounts);
 router.get('/particular-user-detail', protectedRouter, userListController.getParticularUserDetails);
