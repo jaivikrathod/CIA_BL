@@ -3,7 +3,7 @@ const { Op, fn, col, literal } = require('sequelize');
 
 exports.getInsuranceReports = async (req, res) => {
     try {
-        const { user_id, entity_type = 'user', entity_id, preset, start_date, end_date } = req.query;
+        const { user_id, entity_type = 'user', entity_id, preset, start_date, end_date, detailed = false } = req.query;
         if (!user_id) {
             return res.status(400).json({ success: false, message: 'User ID is required.' });
         }
@@ -155,7 +155,72 @@ exports.getInsuranceReports = async (req, res) => {
         let agentsCount;
         agentsCount = await db.agents.count({ where: { is_active: 1 } });
 
-        return res.status(200).json({
+        // If detailed data is requested, fetch detailed insurance records
+        let detailedData = null;
+        if (detailed === 'true' || detailed === true) {
+            const detailedResults = await db.insurance_details.findAll({
+                where: whereClause,
+                include: [
+                    {
+                        model: db.insurance_common_details,
+                        as: 'insurance_common_detail',
+                        attributes: [
+                            'customer_id', 'segment', 'vehicle_number', 'insurance_type',
+                            'segment_vehicle_type', 'segment_vehicle_detail_type', 'model', 
+                            'manufacturer', 'fuel_type', 'yom'
+                        ],
+                        include: [
+                            {
+                                model: db.customers,
+                                as: 'customer',
+                                attributes: ['full_name', 'email', 'primary_mobile', 'dob']
+                            }
+                        ]
+                    }
+                ],
+                order: [['insurance_date', 'DESC']]
+            });
+
+            // Format the detailed data
+            detailedData = detailedResults.map(result => {
+                const record = result.toJSON();
+                const commonDetail = record.insurance_common_detail;
+                const customer = commonDetail?.customer;
+                
+                // Calculate age from DOB
+                let age = null;
+                if (customer?.dob) {
+                    const dobDate = new Date(customer.dob);
+                    const diff = Date.now() - dobDate.getTime();
+                    const ageDate = new Date(diff);
+                    age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                }
+
+                return {
+                    customer_name: customer?.full_name || '',
+                    email: customer?.email || '',
+                    mobile: customer?.primary_mobile || '',
+                    dob: customer?.dob || '',
+                    age: age,
+                    vehicle_number: commonDetail?.vehicle_number || '',
+                    insurance_type: commonDetail?.insurance_type || '',
+                    segment: commonDetail?.segment || '',
+                    manufacturer: commonDetail?.manufacturer || '',
+                    model: commonDetail?.model || '',
+                    fuel_type: commonDetail?.fuel_type || '',
+                    yom: commonDetail?.yom || '',
+                    policy_start_date: record.policy_start_date || '',
+                    policy_expiry_date: record.policy_expiry_date || '',
+                    insurance_date: record.insurance_date || '',
+                    insurance_count: record.insurance_count || '',
+                    premium: record.premium || '',
+                    package_premium: record.package_premium || '',
+                    amount: record.amount || ''
+                };
+            });
+        }
+
+        const responseData = {
             success: true,
             data,
             counts: {
@@ -170,7 +235,14 @@ exports.getInsuranceReports = async (req, res) => {
                 premium:premium,
                 amount:amount
             }
-        });
+        };
+
+        // Add detailed data if requested
+        if (detailedData) {
+            responseData.detailed_data = detailedData;
+        }
+
+        return res.status(200).json(responseData);
     } catch (error) {
         console.error('Error in getInsuranceReports:', error);
         return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
