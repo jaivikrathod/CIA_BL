@@ -159,7 +159,7 @@ const mysql = require('../../config/db');
 
 exports.listInsurance = async (req, res) => {
     try {
-        let { search, segment, minAge, maxAge, page = 1, limit = 10,admin } = req.body;
+        let { search, segment, minAge, maxAge, page = 1, limit = 10, admin, dateRange, fromDate, toDate } = req.body;
         
         page = Number(page) || 1;
         limit = Number(limit) || 10;
@@ -176,6 +176,7 @@ exports.listInsurance = async (req, res) => {
                 idt.insurance_date, 
                 c.full_name, 
                 c.email,
+                c.primary_mobile,
                 c.dob
             FROM insurance_common_details icd
             JOIN (
@@ -240,6 +241,88 @@ exports.listInsurance = async (req, res) => {
             const maxAgeDate = new Date(currentYear - minAge, currentMonth, currentDay);
             query += ' AND c.dob BETWEEN ? AND ?';
             params.push(minAgeDate.toISOString().split('T')[0], maxAgeDate.toISOString().split('T')[0]);
+        }
+
+        // Add date range filter for insurance_date if provided
+        const pad = (num) => (num < 10 ? `0${num}` : `${num}`);
+        const formatYMD = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+        let startDateFilter = null;
+        let endDateFilter = null;
+
+        if ((dateRange && String(dateRange).trim() !== '') || (fromDate && toDate)) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            const normalizedFrom = fromDate ? formatYMD(new Date(fromDate)) : null;
+            const normalizedTo = toDate ? formatYMD(new Date(toDate)) : null;
+
+            switch (String(dateRange || '').trim()) {
+                case 'today': {
+                    startDateFilter = formatYMD(today);
+                    endDateFilter = formatYMD(today);
+                    break;
+                }
+                case 'yesterday': {
+                    const y = new Date(today);
+                    y.setDate(y.getDate() - 1);
+                    startDateFilter = formatYMD(y);
+                    endDateFilter = formatYMD(y);
+                    break;
+                }
+                case 'last7': {
+                    const s = new Date(today);
+                    s.setDate(s.getDate() - 6);
+                    startDateFilter = formatYMD(s);
+                    endDateFilter = formatYMD(today);
+                    break;
+                }
+                case 'last30': {
+                    const s = new Date(today);
+                    s.setDate(s.getDate() - 29);
+                    startDateFilter = formatYMD(s);
+                    endDateFilter = formatYMD(today);
+                    break;
+                }
+                case 'thisMonth': {
+                    const s = new Date(today.getFullYear(), today.getMonth(), 1);
+                    startDateFilter = formatYMD(s);
+                    endDateFilter = formatYMD(today);
+                    break;
+                }
+                case 'lastMonth': {
+                    const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const lastOfLastMonth = new Date(firstOfThisMonth - 1);
+                    const firstOfLastMonth = new Date(lastOfLastMonth.getFullYear(), lastOfLastMonth.getMonth(), 1);
+                    startDateFilter = formatYMD(firstOfLastMonth);
+                    endDateFilter = formatYMD(lastOfLastMonth);
+                    break;
+                }
+                case 'thisYear': {
+                    const s = new Date(today.getFullYear(), 0, 1);
+                    startDateFilter = formatYMD(s);
+                    endDateFilter = formatYMD(today);
+                    break;
+                }
+                case 'custom':
+                default: {
+                    if (normalizedFrom && normalizedTo) {
+                        startDateFilter = normalizedFrom;
+                        endDateFilter = normalizedTo;
+                    } else if (normalizedFrom) {
+                        startDateFilter = normalizedFrom;
+                        endDateFilter = normalizedFrom;
+                    } else if (normalizedTo) {
+                        startDateFilter = normalizedTo;
+                        endDateFilter = normalizedTo;
+                    }
+                }
+            }
+
+            if (startDateFilter && endDateFilter) {
+                query += ' AND DATE(idt.insurance_date) BETWEEN ? AND ?';
+                params.push(startDateFilter, endDateFilter);
+            }
         }
         
         if (limit == 0) {
