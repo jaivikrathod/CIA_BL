@@ -186,19 +186,19 @@ exports.DeleteInsuranceDetails = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Record id is required.' });
         }
 
-        const record = await db.insurance_details.findOne({ where: { id } });
-        if (!record) {
-            return res.status(404).json({ success: false, message: 'Record not found.' });
-        }
+        // const record = await db.insurance_details.findOne({ where: { id } });
+        // if (!record) {
+        //     return res.status(404).json({ success: false, message: 'Record not found.' });
+        // }
 
-        const insuranceId = record.insurance_id;
+        // const insuranceId = record.insurance_id;
 
         const deleted = await db.insurance_details.destroy({
-            where: { insurance_id: insuranceId }
+            where: { insurance_id: id }
         });
 
         const deleted2 = await db.insurance_common_details.destroy({
-            where: { id: insuranceId }
+            where: { id: id }
         });
 
         if (!deleted || !deleted2) {
