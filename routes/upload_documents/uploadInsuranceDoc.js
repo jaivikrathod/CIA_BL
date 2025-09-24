@@ -73,7 +73,7 @@ exports.uploadInsuranceDocument = (req, res) => {
             let result;
 
             if(!id){
-                existingDocumentQuery = `SELECT documents FROM ${table} WHERE insurance_id = ? order by insurance_count desc LIMIT 1`;
+                existingDocumentQuery = `SELECT documents FROM ${table} WHERE id = ?`;
                 [result] = await db.execute(existingDocumentQuery, [customer_id]);            
             }else{
                 existingDocumentQuery = `SELECT documents FROM ${table} WHERE id = ?`;
