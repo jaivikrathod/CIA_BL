@@ -2,28 +2,36 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 exports.changePass = async (req, res) => {
-  const { id } = req.params; // Get user ID from URL
-  const { password } = req.body; // Get new password from request body
+  const { id } = req.params;
+  const { oldPassword, newPassword } = req.body;
 
-  if (!password) {
-    return res.status(400).json({ success: false, message: "Password is required" });
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ success: false, message: "Old and new passwords are required" });
   }
 
   try {
-    // Hash the new password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Update password in the database
-    const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
-    const [result] = await db.execute(updateQuery, [hashedPassword, id]);
-
-    if (result.affectedRows === 0) {
+    // Fetch user
+    const [rows] = await db.execute("SELECT password FROM users WHERE id = ?", [id]);
+    if (rows.length === 0) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ success: true, message: "Password changed successfully" });
+    const hashedOldPassword = rows[0].password;
 
+    // Compare old password
+    const isMatch = await bcrypt.compare(oldPassword, hashedOldPassword);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: "Old password is incorrect" });
+    }
+
+    // Hash new password
+    const saltRounds = 10;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Update DB
+    const [result] = await db.execute("UPDATE users SET password = ? WHERE id = ?", [hashedNewPassword, id]);
+
+    res.status(200).json({ success: true, message: "Password changed successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
