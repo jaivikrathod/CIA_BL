@@ -331,8 +331,8 @@ exports.listInsurance = async (req, res) => {
             query += ` ORDER BY icd.id DESC LIMIT ${Number(limitPlusOne)} OFFSET ${Number(offset)}`;
         }
 
-        console.log('Final Query:', query);
-        console.log('Query Parameters:', params);
+        // console.log('Final Query:', query);
+        // console.log('Query Parameters:', params);
 
         const [insurance] = await mysql.execute(query, params);
 

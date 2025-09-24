@@ -79,10 +79,10 @@ exports.generalCommon = async (req, res) => {
     );
 
     if (insuranceDetails && insuranceDetails.id) {
-      console.log("Insurance details inserted successfully:", insuranceDetails.id);
+      // console.log("Insurance details inserted successfully:", insuranceDetails.id);
       return res.json({ success: true, id: insuranceDetails.id, message: 'Insurance details inserted successfully' });
     } else {
-      console.log("Failed to insert insurance details.");
+      // console.log("Failed to insert insurance details.");
       return res.json({ success: false, message: 'Failed to insert insurance details.' });
     }
   } catch (error) {

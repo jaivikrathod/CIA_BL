@@ -3,26 +3,26 @@ const ResponseHandler = require('../../utils/responseHandler');
 
 exports.handleAddEditCustomer = async (req, res) => {
     try {
-        const { id, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address } = req.body;
+        const { id,type,date_of_incorporation, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address } = req.body;
 
-        if (!full_name || !email || !primary_mobile || !gender || !dob || !state || !city || !full_address) {
-            return ResponseHandler.validationError(res, 'Full name, email, primary mobile, gender, state, city, and full address are required.');
+        if (!full_name || !primary_mobile || !dob || !state || !city || !full_address) {
+            return ResponseHandler.validationError(res, 'Full name, primary mobile, gender, state, city, and full address are required.');
         }
 
         const user_id = req.headers['x-user-id'];
         // Check if the email or primary mobile already exists in the database
-        const check = await db.customers.findOne({
-            where: {
-                [db.Sequelize.Op.or]: [
-                    { email },
-                    { primary_mobile }
-                ],
-                id: { [db.Sequelize.Op.ne]: id || 0 }
-            }
-        });
-        if (check) {
-            return ResponseHandler.conflict(res, 'Email or primary mobile already exists.');
-        }
+        // const check = await db.customers.findOne({
+        //     where: {
+        //         [db.Sequelize.Op.or]: [
+        //             { email },
+        //             { primary_mobile }
+        //         ],
+        //         id: { [db.Sequelize.Op.ne]: id || 0 }
+        //     }
+        // });
+        // if (check) {
+        //     return ResponseHandler.conflict(res, 'Email or primary mobile already exists.');
+        // }
 
         let response;
         let customerId;
@@ -38,7 +38,9 @@ exports.handleAddEditCustomer = async (req, res) => {
                 state,
                 city,
                 full_address,
-                documents: ''
+                documents: '',
+                type,
+                date_of_incorporation
             });
             customerId = response.id;
         } else {
@@ -51,7 +53,9 @@ exports.handleAddEditCustomer = async (req, res) => {
                 gender,
                 state,
                 city,
-                full_address
+                full_address,
+                type,
+                date_of_incorporation
             }, {
                 where: { id }
             });

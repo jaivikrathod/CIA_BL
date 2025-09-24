@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, 
+    limits: { fileSize: 15 * 1024 * 1024 }, 
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
         if (allowedTypes.includes(file.mimetype)) {
@@ -35,13 +35,12 @@ const upload = multer({
 
 exports.uploadInsuranceDocument = (req, res) => {
     upload(req, res, async (err) => {
-        console.log(req.body);
         
         if (err) {
             return res.status(400).json({ message: err.message });
         }
 
-        const { document_type, customer_id } = req.body;
+        const { document_type, customer_id,id } = req.body;
 
         if (!document_type || !customer_id) {
             return res.status(400).json({ message: 'Missing required fields: document_type or customer_id' });
@@ -69,9 +68,18 @@ exports.uploadInsuranceDocument = (req, res) => {
                 name: newFileName,
                 type: document_type,
             };
+
+            let existingDocumentQuery;
+            let result;
+
+            if(!id){
+                existingDocumentQuery = `SELECT documents FROM ${table} WHERE insurance_id = ? order by insurance_count desc LIMIT 1`;
+                [result] = await db.execute(existingDocumentQuery, [customer_id]);            
+            }else{
+                existingDocumentQuery = `SELECT documents FROM ${table} WHERE id = ?`;
+                [result] = await db.execute(existingDocumentQuery, [id]);
+            }
         
-            const existingDocumentQuery = `SELECT documents FROM ${table} WHERE insurance_id = ? order by insurance_count desc LIMIT 1`;
-            const [result] = await db.execute(existingDocumentQuery, [customer_id]);            
         
             let documentsArray = [];
         
@@ -86,14 +94,14 @@ exports.uploadInsuranceDocument = (req, res) => {
                 }
         
                 // Check if the same document type already exists
-                const existingDoc = documentsArray.find(doc => doc.type === document_type);
-                if (existingDoc) {
-                    fs.unlinkSync(finalPath);  // Delete the newly uploaded file
-                    return res.json({ 
-                        success: false,
-                        message: 'Document of this type is already uploaded' 
-                    });
-                }
+                // const existingDoc = documentsArray.find(doc => doc.type === document_type);
+                // if (existingDoc) {
+                //     fs.unlinkSync(finalPath);  // Delete the newly uploaded file
+                //     return res.json({ 
+                //         success: false,
+                //         message: 'Document of this type is already uploaded' 
+                //     });
+                // }
             }
         
             // Add the new document to the array

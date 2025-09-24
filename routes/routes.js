@@ -74,6 +74,9 @@ router.post('/create-insurance', protectedRouter, Insurance.CreateInsurance);
 router.post('/renew-insurance', protectedRouter, Insurance.RenewInsurance);
 router.post('/update-insurance', protectedRouter, Insurance.UpdateInsurance);
 
+router.post('/delete-particular-insurance', protectedRouter, Insurance.DeleteParticularInsurance);
+router.post('/delete-insurance-details', protectedRouter, Insurance.DeleteInsuranceDetails);
+
 router.get('/particular-insurance', protectedRouter, getParticularInsurance.getParticularInsurance);
 router.get('/particular-insurance-document',protectedRouter,getParticularInsurance.getParticularInsuranceDocuments);
 router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedocument);

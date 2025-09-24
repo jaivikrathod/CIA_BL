@@ -8,10 +8,7 @@ exports.validateUser = async (req, res, next) => {
     if (!token || !userId) {
         return ResponseHandler.unauthorized(res, 'Authorization token and user ID are required.');
     }
-    console.log(token);
-    console.log(userId);
     
-
     try {
         const tokenRow = await db.tokens.findOne({ where: { user_id: userId, token } });
         if (!tokenRow) {

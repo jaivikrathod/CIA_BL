@@ -98,10 +98,10 @@ exports.CreateInsurance = async (req, res) => {
 exports.UpdateInsurance = async (req, res) => {
     try {
         const data = req.body.payload;
-        console.log('Received data:', data);
-        console.log('isMotor:', data.isMotor);
-        console.log('insurance_detail_id:', data.insurance_detail_id);
-        console.log('insurance_common_detail_id:', data.insurance_common_detail_id);
+        // console.log('Received data:', data);
+        // console.log('isMotor:', data.isMotor);
+        // console.log('insurance_detail_id:', data.insurance_detail_id);
+        // console.log('insurance_common_detail_id:', data.insurance_common_detail_id);
         
         if (data.isMotor) {
             const commonUpdateResult = await db.insurance_common_details.update({
@@ -144,3 +144,71 @@ exports.UpdateInsurance = async (req, res) => {
         });
     }
 }
+
+exports.DeleteParticularInsurance = async (req, res) => {
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'Insurance ID is required for deletion.' });
+        }
+
+        const record = await db.insurance_details.findOne({ where: { id } });
+        if (!record) {
+            return res.status(404).json({ success: false, message: 'Insurance not found.' });
+        }
+
+        const { insurance_id } = record;
+
+        const count = await db.insurance_details.count({ where: { insurance_id } });
+
+        if (count == 1) {
+            await db.insurance_common_details.destroy({ where: { id: insurance_id } });
+        }
+
+        const deleted = await db.insurance_details.destroy({ where: { id } });
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: 'Insurance not found.' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Insurance deleted successfully.' });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+    }
+};
+
+
+exports.DeleteInsuranceDetails = async (req, res) => {
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'Record id is required.' });
+        }
+
+        const record = await db.insurance_details.findOne({ where: { id } });
+        if (!record) {
+            return res.status(404).json({ success: false, message: 'Record not found.' });
+        }
+
+        const insuranceId = record.insurance_id;
+
+        const deleted = await db.insurance_details.destroy({
+            where: { insurance_id: insuranceId }
+        });
+
+        const deleted2 = await db.insurance_common_details.destroy({
+            where: { id: insuranceId }
+        });
+
+        if (!deleted || !deleted2) {
+            return res.status(404).json({ success: false, message: 'Record not found.' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Deleted successfully.' });
+
+    } catch (error) {
+        console.error('DeleteInsuranceDetails error:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+};

@@ -9,7 +9,7 @@ exports.vehicalCommon = async (req, res) => {
     }
     // Validate the incoming data
     if (!vehicle_number || !manufacturer || !model || !yom || !fuel_type || !user_id || !id) {
-      console.log("All fields are required");
+      // console.log("All fields are required");
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -28,7 +28,7 @@ exports.vehicalCommon = async (req, res) => {
     );
 
     if (affectedRows === 0) {
-      console.log("No rows were updated. Check if the ID exists.");
+      // console.log("No rows were updated. Check if the ID exists.");
       return res.status(404).json({ message: 'No matching record found' });
     }
 
@@ -50,7 +50,7 @@ exports.getvehicalCommon = async (req, res) => {
         message: 'Insurance ID is required'
       });
     }
-    console.log(id);
+    // console.log(id);
 
     const insurance = await db.insurance_common_details.findOne({ where: { id } });
 
