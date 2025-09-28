@@ -70,6 +70,7 @@ router.post('/fill-initial-details', protectedRouter, FillInitialDetail.InitialD
 router.post('/common-vehical', protectedRouter, CommonVehical.vehicalCommon);
 router.post('/common-general', protectedRouter, CommonGeneral.generalCommon);
 router.post('/insurance-list', protectedRouter, ListInsuranceDetail.listInsurance);
+router.post('/insurance-pending-amount-list', protectedRouter, ListInsuranceDetail.insurancePendingAmountList);
 router.post('/create-insurance', protectedRouter, Insurance.CreateInsurance);
 router.post('/renew-insurance', protectedRouter, Insurance.RenewInsurance);
 router.post('/update-insurance', protectedRouter, Insurance.UpdateInsurance);
