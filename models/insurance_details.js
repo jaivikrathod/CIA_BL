@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: true
     },
+    agent_code: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
     insurance_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
@@ -120,15 +124,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    tds: {
+    net_payout_percent: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    tds_amount: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    payment_amount: {
+    net_amount: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

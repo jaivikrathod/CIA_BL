@@ -27,7 +27,11 @@ exports.generalCommon = async (req, res) => {
       tds,
       user_id,
       insurance_id,
-      common_id
+      common_id,
+      agent_code,
+      net_payout_percent,
+      net_amount,
+      net_income
     } = req.body;
 
     let customer_id = null;
@@ -35,6 +39,8 @@ exports.generalCommon = async (req, res) => {
     if (customer) {
       customer_id = customer.customer_id;
     }
+
+    tds = tds || 0;
 
     let insurance_count = 1;
     if (common_id) {
@@ -71,6 +77,10 @@ exports.generalCommon = async (req, res) => {
       amount: amount,
       tds: tds,
       insurance_count: insurance_count,
+      agent_code:agent_code,
+      net_payout_percent: net_payout_percent,
+      net_amount: net_amount,
+      net_income: net_income
     });
 
     await db.insurance_common_details.update(

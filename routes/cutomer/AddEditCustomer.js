@@ -5,8 +5,8 @@ exports.handleAddEditCustomer = async (req, res) => {
     try {
         const { id,type,date_of_incorporation, full_name, email, primary_mobile, additional_mobile, dob, gender, state, city, full_address } = req.body;
 
-        if (!full_name || !primary_mobile || !dob || !state || !city || !full_address) {
-            return ResponseHandler.validationError(res, 'Full name, primary mobile, gender, state, city, and full address are required.');
+        if (!full_name || !primary_mobile  || !state || !city || !full_address) {
+            return ResponseHandler.validationError(res, 'Full name, primary mobile, state, city, and full address are required.');
         }
 
         const user_id = req.headers['x-user-id'];
