@@ -3,29 +3,21 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class agents extends Model {
+  class agentscode extends Model {
     static associate(models) {    }
   }
-  agents.init({
+  agentscode.init({
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    full_name: {
-      type: DataTypes.STRING(20),
-      allowNull: false
-    },
-    email: {
+    agent_name: {
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    primary_mobile: {
+    agent_code: {
       type: DataTypes.STRING(20),
       allowNull: false
     },
@@ -35,13 +27,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'agents',
-    tableName: 'agents',
+    modelName: 'agentscode',
+    tableName: 'agentscode',
     freezeTableName: true,
     underscored: true,
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   });
-  return agents;
+  return agentscode;
 };

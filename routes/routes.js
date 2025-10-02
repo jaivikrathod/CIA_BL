@@ -117,6 +117,15 @@ router.get('/agent-list', protectedRouter, agentAddEditController.listAgents);
 router.post('/agent-delete', protectedRouter, agentAddEditController.handleDeleteAgent);
 router.get('/getAgentCounts', protectedRouter, agentAddEditController.agentscount);
 
+//====================== Agent Code Management ====================
+
+const agentCodeAddEditController = require('./AgentCode/AgentCodeManagement');
+
+router.post('/agentcode-create-edit', protectedRouter, agentCodeAddEditController.handleAddEditAgent);
+router.get('/agentcode-list', protectedRouter, agentCodeAddEditController.listAgents);
+router.post('/agentcode-delete', protectedRouter, agentCodeAddEditController.handleDeleteAgentCode);
+
+
 const VehicleController = require('./Vehicle/VehicleController');
 
 // Vehicle Company routes
