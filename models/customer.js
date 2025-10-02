@@ -33,14 +33,20 @@ module.exports = (sequelize, DataTypes) => {
     gender: {
       type: DataTypes.STRING(10)
     },
-     type: {
+    type: {
       type: DataTypes.STRING(10)
     },
     dob: {
-      type: DataTypes.DATEONLY
+      type: DataTypes.DATEONLY,
+      set(value) {
+        this.setDataValue('dob', value && value !== '' ? value : null);
+      }
     },
     date_of_incorporation: {
-      type: DataTypes.DATEONLY
+      type: DataTypes.DATEONLY,
+      set(value) {
+        this.setDataValue('date_of_incorporation', value && value !== '' ? value : null);
+      }
     },
     email: {
       type: DataTypes.STRING(100)
