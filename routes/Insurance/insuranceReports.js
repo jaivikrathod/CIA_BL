@@ -72,6 +72,7 @@ exports.getInsuranceReports = async (req, res) => {
                 whereClause.user_id = user_id;
             }
             whereClause.case_type = 'office';
+            whereClause.case_type = 'self';
         }
 
         const results = await db.insurance_details.findAll({
@@ -349,6 +350,7 @@ exports.getInsuranceCategoryReports = async (req, res) => {
         } else if (entity_type === 'user') {
             whereClause.user_id = entity_id || user_id;
             whereClause.case_type = 'office';
+            whereClause.case_type = 'self';
         }
 
         const results = await db.insurance_details.findAll({
