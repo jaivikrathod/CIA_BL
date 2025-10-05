@@ -20,6 +20,11 @@ exports.handleDeleteCustomer = async (req, res) => {
             { is_active: 0 },
             { where: { customer_id: id } }
         );
+        
+        await db.insurance_details.update(
+            { is_active: 0 },
+            { where: { customer_id: id } }
+        );
 
         return res.status(200).json({ success: true, message: 'Customer deactivated successfully.' });
     } catch (error) {

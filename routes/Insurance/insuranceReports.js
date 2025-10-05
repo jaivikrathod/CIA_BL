@@ -168,7 +168,8 @@ exports.getInsuranceReports = async (req, res) => {
         const fiveDaysAgo = new Date();
         fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
         let newCustomersCount;
-        const newCustomersWhere = { created_at: { [db.Sequelize.Op.gte]: fiveDaysAgo }, is_active: 1 };
+        const newCustomersWhere = {is_active: 1 };
+        newCustomersWhere = { created_at: { [db.Sequelize.Op.gte]: fiveDaysAgo }};
         if (entity_id) {
             newCustomersWhere.user_id = entity_id;
         }
