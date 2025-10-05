@@ -1,22 +1,17 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class insurance_details extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Define association here
       insurance_details.belongsTo(models.insurance_common_details, {
         foreignKey: 'insurance_id',
         as: 'insurance_common_detail'
       });
     }
   }
+
   insurance_details.init({
     id: {
       type: DataTypes.INTEGER,
@@ -72,26 +67,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: true
     },
+
+    // ✅ Converted numeric fields to DECIMAL(15, 2)
     od_premium: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     tp_premium: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     package_premium: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     gst: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     premium: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
+
     collection_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
@@ -116,30 +119,39 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: true
     },
+
+    // ✅ Converted payout and amount fields to DECIMAL
     payout_percent: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     amount: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     net_payout_percent: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     net_amount: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     difference: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
     net_income: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
     },
+
     payment_received: {
       type: DataTypes.TINYINT,
       allowNull: true
@@ -167,5 +179,6 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   });
+
   return insurance_details;
 };

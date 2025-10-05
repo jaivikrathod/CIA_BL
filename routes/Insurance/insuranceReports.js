@@ -127,6 +127,27 @@ exports.getInsuranceReports = async (req, res) => {
         const amount = await db.insurance_details.sum('amount', {
             where: whereClause
         });
+         const od_premium = await db.insurance_details.sum('od_premium', {
+            where: whereClause
+        });
+          const tp_premium = await db.insurance_details.sum('tp_premium', {
+            where: whereClause
+        });
+         const gst = await db.insurance_details.sum('gst', {
+            where: whereClause
+        });
+        const net_payout_percent = await db.insurance_details.sum('net_payout_percent', {
+            where: whereClause
+        });
+        const net_amount = await db.insurance_details.sum('net_amount', {
+            where: whereClause
+        });
+        const net_income = await db.insurance_details.sum('net_income', {
+            where: whereClause
+        });
+        const payout_percent = await db.insurance_details.sum('payout_percent', {
+            where: whereClause
+        });
 
         let usersCount;
         usersCount = await db.users.count({ where: { is_active: 1 } });
@@ -180,6 +201,7 @@ exports.getInsuranceReports = async (req, res) => {
                 ],
                 order: [['insurance_date', 'DESC']]
             });
+            // return res.json(detailedResults);
 
             // Format the detailed data
             detailedData = detailedResults.map(result => {
@@ -213,9 +235,16 @@ exports.getInsuranceReports = async (req, res) => {
                     policy_expiry_date: record.policy_expiry_date || '',
                     insurance_date: record.insurance_date || '',
                     insurance_count: record.insurance_count || '',
-                    premium: record.premium || '',
-                    package_premium: record.package_premium || '',
-                    amount: record.amount || ''
+                    packagePremium:record.package_premium,
+                    premium:record.premium,
+                    amount:record.amount,
+                    od_premium:record.od_premium || 0,
+                    tp_premium:record.tp_premium || 0,
+                    gst:record.gst || 0,
+                    net_payout_percent:record.net_payout_percent || 0,
+                    net_amount:record.net_amount || 0,
+                    net_income:record.net_income || 0,
+                    payout_percent:record.payout_percent || 0
                 };
             });
         }
@@ -233,7 +262,14 @@ exports.getInsuranceReports = async (req, res) => {
             insurance_data:{
                 packagePremium:packagePremium,
                 premium:premium,
-                amount:amount
+                amount:amount,
+                od_premium:od_premium || 0,
+                tp_premium:tp_premium || 0,
+                gst:gst || 0,
+                net_payout_percent:net_payout_percent || 0,
+                net_amount:net_amount || 0,
+                net_income:net_income || 0,
+                payout_percent:payout_percent || 0
             }
         };
 

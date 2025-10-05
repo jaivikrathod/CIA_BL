@@ -434,12 +434,14 @@ exports.listInsurance = async (req, res) => {
                 icd.model LIKE ? OR 
                 icd.manufacturer LIKE ? OR 
                 c.full_name LIKE ? OR 
-                c.email LIKE ?
+                c.email LIKE ? OR
+                c.primary_mobile LIKE ?
             )`;
             const searchPattern = `%${search}%`;
             params.push(
                 searchPattern, searchPattern, searchPattern,
-                searchPattern, searchPattern, searchPattern
+                searchPattern, searchPattern, searchPattern,
+                searchPattern
             );
         }
 
@@ -626,32 +628,38 @@ exports.insurancePendingAmountList = async (req, res) => {
         const limitPlusOne = limit ? limit + 1 : null;
 
         let query = `
+    SELECT 
+        icd.*, 
+        idt.insurance_count,
+        idt.common_id,
+        idt.insurance_date, 
+        c.full_name, 
+        c.email,
+        c.primary_mobile,
+        c.dob
+    FROM insurance_common_details icd
+    JOIN (
         SELECT 
-            icd.*, 
-            idt.insurance_count,
-            idt.common_id,
-            idt.insurance_date, 
-            c.full_name, 
-            c.email,
-            c.primary_mobile,
-            c.dob
-        FROM insurance_common_details icd
-        JOIN (
-            SELECT 
-                insurance_id, 
-                MAX(insurance_count) AS max_count
-            FROM insurance_details
-            GROUP BY insurance_id
-        ) AS max_counts
-            ON icd.id = max_counts.insurance_id
-        JOIN insurance_details idt 
-            ON idt.insurance_id = max_counts.insurance_id 
-            AND idt.insurance_count = max_counts.max_count
-        JOIN customers c 
-            ON icd.customer_id = c.id
-        WHERE c.is_active = 1 
-          AND idt.amount IS NULL
-    `;
+            insurance_id, 
+            MAX(insurance_count) AS max_count
+        FROM insurance_details
+        GROUP BY insurance_id
+    ) AS max_counts
+        ON icd.id = max_counts.insurance_id
+    JOIN insurance_details idt 
+        ON idt.insurance_id = max_counts.insurance_id 
+        AND idt.insurance_count = max_counts.max_count
+    JOIN customers c 
+        ON icd.customer_id = c.id
+    WHERE 
+        c.is_active = 1
+        AND (
+            idt.amount IS NULL 
+            OR idt.net_amount IS NULL 
+            OR idt.net_income IS NULL
+        )
+`;
+
 
         const params = [];
 
@@ -663,12 +671,13 @@ exports.insurancePendingAmountList = async (req, res) => {
                 icd.model LIKE ? OR 
                 icd.manufacturer LIKE ? OR 
                 c.full_name LIKE ? OR 
-                c.email LIKE ?
+                c.email LIKE ? OR
+                c.primary_mobile LIKE ?
             )`;
             const searchPattern = `%${search}%`;
             params.push(
                 searchPattern, searchPattern, searchPattern,
-                searchPattern, searchPattern, searchPattern
+                searchPattern, searchPattern, searchPattern, searchPattern
             );
         }
 
