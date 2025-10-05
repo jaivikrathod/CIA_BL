@@ -159,6 +159,9 @@ exports.getInsuranceReports = async (req, res) => {
         }
         if (entity_id) {
             customersWhere.user_id = entity_id;
+        }else{
+            customersWhere.user_id = user_id;
+
         }
         customersCount = await db.customers.count({ where: customersWhere });
 
