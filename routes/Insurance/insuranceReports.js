@@ -71,8 +71,10 @@ exports.getInsuranceReports = async (req, res) => {
             } else {
                 whereClause.user_id = user_id;
             }
-            whereClause.case_type = 'office';
-            whereClause.case_type = 'self';
+            whereClause[Op.or] = [
+                { case_type: 'office' },
+                { case_type: 'self' }
+            ];
         }
 
         const results = await db.insurance_details.findAll({
