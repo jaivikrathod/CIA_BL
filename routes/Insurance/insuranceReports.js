@@ -1,3 +1,4 @@
+const e = require('express');
 const db = require('../../models');
 const { Op, fn, col, literal } = require('sequelize');
 
@@ -75,6 +76,8 @@ exports.getInsuranceReports = async (req, res) => {
                 { case_type: 'office' },
                 { case_type: 'self' }
             ];
+        }else if(entity_type === 'all'){
+            // No additional filtering
         }
 
         const results = await db.insurance_details.findAll({
@@ -160,11 +163,8 @@ exports.getInsuranceReports = async (req, res) => {
         if (!noDateFilter) {
             customersWhere.created_at = { [Op.gte]: rangeStart, [Op.lte]: rangeEnd };
         }
-        if (entity_id) {
+        if (entity_id && entity_type !='all') {
             customersWhere.user_id = entity_id;
-        }else{
-            customersWhere.user_id = user_id;
-
         }
         customersCount = await db.customers.count({ where: customersWhere });
 
@@ -173,10 +173,8 @@ exports.getInsuranceReports = async (req, res) => {
         let newCustomersCount;
         const newCustomersWhere = {is_active: 1 };
         newCustomersWhere.created_at= { [db.Sequelize.Op.gte]: fiveDaysAgo };
-        if (entity_id) {
+        if (entity_id && entity_type !='all') {
             newCustomersWhere.user_id = entity_id;
-        }else {
-            newCustomersWhere.user_id = user_id;
         }
         newCustomersCount = await db.customers.count({
             where: newCustomersWhere

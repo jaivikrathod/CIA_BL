@@ -627,39 +627,94 @@ exports.insurancePendingAmountList = async (req, res) => {
         const offset = limit ? (page - 1) * limit : 0;
         const limitPlusOne = limit ? limit + 1 : null;
 
-        let query = `
-    SELECT 
-        icd.*, 
-        idt.insurance_count,
-        idt.common_id,
-        idt.insurance_date, 
-        c.full_name, 
-        c.email,
-        c.primary_mobile,
-        c.dob
-    FROM insurance_common_details icd
-    JOIN (
-        SELECT 
-            insurance_id, 
-            MAX(insurance_count) AS max_count
-        FROM insurance_details
-        GROUP BY insurance_id
-    ) AS max_counts
-        ON icd.id = max_counts.insurance_id
-    JOIN insurance_details idt 
-        ON idt.insurance_id = max_counts.insurance_id 
-        AND idt.insurance_count = max_counts.max_count
-    JOIN customers c 
-        ON icd.customer_id = c.id
-    WHERE 
-        c.is_active = 1
-        AND (
-            idt.amount IS NULL 
-            OR idt.net_amount IS NULL 
-            OR idt.net_income IS NULL
-        )
-`;
+//         let query = `
+//     SELECT 
+//         icd.*, 
+//         idt.insurance_count,
+//         idt.common_id,
+//         idt.insurance_date, 
+//         c.full_name, 
+//         c.email,
+//         c.primary_mobile,
+//         c.dob
+//     FROM insurance_common_details icd
+//     JOIN (
+//         SELECT 
+//             insurance_id, 
+//             MAX(insurance_count) AS max_count
+//         FROM insurance_details
+//         GROUP BY insurance_id
+//     ) AS max_counts
+//         ON icd.id = max_counts.insurance_id
+//     JOIN insurance_details idt 
+//         ON idt.insurance_id = max_counts.insurance_id 
+//         AND idt.insurance_count = max_counts.max_count
+//     JOIN customers c 
+//         ON icd.customer_id = c.id
+//     WHERE 
+//         c.is_active = 1
+//         AND (
+//             idt.amount IS NULL 
+//             OR idt.net_amount IS NULL 
+//             OR idt.net_income IS NULL
+//         )
+// `;
+//         let query = `SELECT 
+//     icd.*, 
+//     idt.insurance_count,
+//     idt.common_id,
+//     idt.insurance_date, 
+//     c.full_name, 
+//     c.email,
+//     c.primary_mobile,
+//     c.dob
+// FROM insurance_common_details icd
+// JOIN (
+//     SELECT 
+//         insurance_id, 
+//         MAX(insurance_count) AS max_count
+//     FROM insurance_details
+//     GROUP BY insurance_id
+// ) AS max_counts
+//     ON icd.id = max_counts.insurance_id
+// JOIN insurance_details idt 
+//     ON idt.insurance_id = max_counts.insurance_id 
+//     AND idt.insurance_count = max_counts.max_count
+// JOIN customers c 
+//     ON icd.customer_id = c.id
+// WHERE 
+//     c.is_active = 1
+//     AND EXISTS (
+//         SELECT 1 
+//         FROM insurance_details d 
+//         WHERE d.insurance_id = icd.id 
+//         AND (
+//             d.amount IS NULL 
+//             OR d.net_amount IS NULL 
+//             OR d.net_income IS NULL
+//         )
+//     )`;
 
+        let query = `SELECT 
+    icd.*, 
+    idt.*,
+    c.full_name, 
+    c.email,
+    c.primary_mobile,
+    c.dob
+FROM insurance_common_details icd
+JOIN insurance_details idt 
+    ON icd.id = idt.insurance_id
+JOIN customers c 
+    ON icd.customer_id = c.id
+WHERE 
+    c.is_active = 1
+    AND (
+        idt.amount IS NULL 
+        OR idt.net_amount IS NULL 
+        OR idt.net_income IS NULL
+    )
+        `;
 
         const params = [];
 
