@@ -129,17 +129,24 @@ router.post('/agentcode-delete', protectedRouter, agentCodeAddEditController.han
 const VehicleController = require('./Vehicle/VehicleController');
 
 // Vehicle Company routes
-router.post('/create-vehicle-company', VehicleController.createVehicleCompany);
-router.get('/get-vehicle-companies', VehicleController.getVehicleCompanies);
-router.get('/get-vehicle-company/:id', VehicleController.getVehicleCompanyById);
-router.post('/update-vehicle-company', VehicleController.updateVehicleCompany);
-router.post('/delete-vehicle-company', VehicleController.deleteVehicleCompany);
+router.post('/create-vehicle-company',protectedRouter, VehicleController.createVehicleCompany);
+router.get('/get-vehicle-companies',protectedRouter, VehicleController.getVehicleCompanies);
+router.get('/get-vehicle-company/:id',protectedRouter, VehicleController.getVehicleCompanyById);
+router.post('/update-vehicle-company',protectedRouter, VehicleController.updateVehicleCompany);
+router.post('/delete-vehicle-company',protectedRouter, VehicleController.deleteVehicleCompany);
 
 // Vehicle Model routes
-router.post('/create-vehicle-model', VehicleController.createVehicleModel);
-router.get('/get-vehicle-models', VehicleController.getVehicleModels);
-router.get('/get-vehicle-modelBycompany', VehicleController.getVehicleModelsById);
-router.post('/update-vehicle-model', VehicleController.updateVehicleModel);
-router.post('/delete-vehicle-model', VehicleController.deleteVehicleModel);
+router.post('/create-vehicle-model',protectedRouter, VehicleController.createVehicleModel);
+router.get('/get-vehicle-models',protectedRouter, VehicleController.getVehicleModels);
+router.get('/get-vehicle-modelBycompany',protectedRouter, VehicleController.getVehicleModelsById);
+router.post('/update-vehicle-model',protectedRouter, VehicleController.updateVehicleModel);
+router.post('/delete-vehicle-model',protectedRouter, VehicleController.deleteVehicleModel);
+
+
+//submit insurance forms
+
+const customerQueriesController = require('./cutomer/customerQueriesController');
+
+router.post('/customer-queries',customerQueriesController.submitUserQueries);
 
 module.exports = router;
