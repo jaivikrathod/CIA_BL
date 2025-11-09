@@ -59,7 +59,7 @@ exports.getInsuranceReports = async (req, res) => {
         const noDateFilter = preset === 'all';
         const whereClause = { is_active: 1 };
         if (!noDateFilter) {
-            whereClause.insurance_date = { [Op.gte]: rangeStart, [Op.lte]: rangeEnd };
+            whereClause.policy_start_date = { [Op.gte]: rangeStart, [Op.lte]: rangeEnd };
         }
 
         if (entity_type === 'agent' && entity_id) {
@@ -342,7 +342,7 @@ exports.getInsuranceCategoryReports = async (req, res) => {
         const noDateFilterCat = preset === 'all';
         const whereClause = { is_active: 1 };
         if (!noDateFilterCat) {
-            whereClause.insurance_date = { [Op.gte]: rangeStart, [Op.lte]: rangeEnd };
+            whereClause.policy_start_date = { [Op.gte]: rangeStart, [Op.lte]: rangeEnd };
         }
         if (entity_type === 'agent' && entity_id) {
             whereClause.agent_id = entity_id;
