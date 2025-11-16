@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'insurance_id',
         as: 'insurance_common_detail'
       });
+      insurance_details.belongsTo(models.agents, {
+        foreignKey: 'agent_id',
+        as: 'agent'
+      });
     }
   }
 
@@ -116,8 +120,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     agent_id: {
-      type: DataTypes.STRING(50),
-      allowNull: true
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
 
     // ✅ Converted payout and amount fields to DECIMAL

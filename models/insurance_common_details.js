@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'customer_id',
         as: 'customer'
       });
+      insurance_common_details.belongsTo(models.users, {
+        foreignKey: 'user_id',
+        as: 'user'
+      });
     }
   }
   insurance_common_details.init({
