@@ -4,7 +4,7 @@ const { Op, fn, col, literal } = require('sequelize');
 
 exports.getInsuranceReports = async (req, res) => {
     try {
-        const { user_id, entity_type = 'user', entity_id, preset, start_date, end_date, detailed = false } = req.query;
+        const { user_id, entity_type = 'user', entity_id, preset, start_date, end_date, detailed = false,adminType } = req.query;
         if (!user_id) {
             return res.status(400).json({ success: false, message: 'User ID is required.' });
         }
@@ -201,7 +201,7 @@ exports.getInsuranceReports = async (req, res) => {
                             {
                                 model: db.customers,
                                 as: 'customer',
-                                attributes: ['full_name', 'email', 'primary_mobile', 'dob']
+                                attributes: ['full_name', 'email', 'primary_mobile','additional_mobile', 'dob','city']
                             }
                         ]
                     }
@@ -215,7 +215,7 @@ exports.getInsuranceReports = async (req, res) => {
                 const record = result.toJSON();
                 const commonDetail = record.insurance_common_detail;
                 const customer = commonDetail?.customer;
-                
+
                 // Calculate age from DOB
                 let age = null;
                 if (customer?.dob) {
@@ -225,34 +225,43 @@ exports.getInsuranceReports = async (req, res) => {
                     age = Math.abs(ageDate.getUTCFullYear() - 1970);
                 }
 
-                return {
-                    customer_name: customer?.full_name || '',
-                    email: customer?.email || '',
-                    mobile: customer?.primary_mobile || '',
-                    dob: customer?.dob || '',
+                let returnData = {
+                    "Business Type": record.business_type,
+                    "Vehicle Number": commonDetail?.vehicle_number || '',
+                    "Customer Name": customer?.full_name || '',
+                    "DOB": customer?.dob || '',
                     age: age,
-                    vehicle_number: commonDetail?.vehicle_number || '',
-                    insurance_type: commonDetail?.insurance_type || '',
-                    segment: commonDetail?.segment || '',
-                    manufacturer: commonDetail?.manufacturer || '',
-                    model: commonDetail?.model || '',
-                    fuel_type: commonDetail?.fuel_type || '',
-                    yom: commonDetail?.yom || '',
-                    policy_start_date: record.policy_start_date || '',
-                    policy_expiry_date: record.policy_expiry_date || '',
-                    insurance_date: record.insurance_date || '',
-                    insurance_count: record.insurance_count || '',
-                    packagePremium:record.package_premium,
-                    premium:record.premium,
-                    amount:record.amount,
-                    od_premium:record.od_premium || 0,
-                    tp_premium:record.tp_premium || 0,
-                    gst:record.gst || 0,
-                    net_payout_percent:record.net_payout_percent || 0,
-                    net_amount:record.net_amount || 0,
-                    net_income:record.net_income || 0,
-                    payout_percent:record.payout_percent || 0
+                    "Mobile": customer?.primary_mobile || '',
+                    "Additional Mobile": customer?.additional_mobile || '',
+                    "Email": customer?.email || '',
+                    "Address": customer?.city || '',
+                    "Manufacturer": commonDetail?.manufacturer || '',
+                    "Model": commonDetail?.model || '',
+                    "Fuel Type": commonDetail?.fuel_type || '',
+                    "YOM": commonDetail?.yom || '',
+                    "Current NCB": record.currentncb || '',
+                    "Insurance Company": record.insurance_company || '',
+                    "Policy No": record.policy_no || '',
+                    "OD Premium": Number(record.od_premium) || 0,
+                    "Package Premium": Number(record.package_premium) || 0,
+                    "Final Premium": Number(record.premium) || 0,
+                    "Policy Start Date": record.policy_start_date || '',
+                    "Policy Expiry Date": record.policy_expiry_date || '',
+                    "Agent Code": record.agent_code || '',
+                    "Payout Percent": Number(record.payout_percent) || 0,
+                    "Net Payout Percent": Number(record.net_payout_percent) || 0,
+                    "Net Amount": Number(record.net_amount) || 0,
+                    "Net Income": Number(record.net_income) || 0,
                 };
+
+                if (adminType !== 'Admin') {
+                    delete returnData['Final Premium']
+                    delete returnData["Payout Percent"];
+                    delete returnData["Net Income"];
+                }
+              
+                return returnData;
+
             });
         }
 
