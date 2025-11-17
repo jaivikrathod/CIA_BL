@@ -121,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     agent_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
 
     // ✅ Converted payout and amount fields to DECIMAL
