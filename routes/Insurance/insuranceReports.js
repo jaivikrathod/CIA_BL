@@ -215,7 +215,7 @@ exports.getInsuranceReports = async (req, res) => {
     // --- Combined sums & counts (for dashboard cards) ---
     const [
       insuranceCount,
-      packagePremium,
+      package_premium,
       premium,
       amount,
       od_premium,
@@ -386,7 +386,7 @@ exports.getInsuranceReports = async (req, res) => {
     } else {
       combinedSummary = {
         policies: Number(insuranceCount || 0),
-        packagePremium: Number(packagePremium || 0),
+        package_premium: Number(package_premium || 0),
         premium: Number(premium || 0),
         amount: Number(amount || 0),
         od_premium: Number(od_premium || 0),
@@ -557,7 +557,7 @@ exports.getInsuranceReports = async (req, res) => {
         agents: Number(agentsCount || 0)
       },
       insurance_data: {
-        packagePremium: Number(packagePremium || 0),
+        package_premium: Number(package_premium || 0),
         premium: Number(premium || 0),
         amount: Number(amount || 0),
         od_premium: Number(od_premium || 0),
