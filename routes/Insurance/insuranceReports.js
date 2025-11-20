@@ -93,6 +93,11 @@ const buildWhereForFilters = (filters, rangeStart, rangeEnd, noDateFilter) => {
   return whereClause;
 };
 
+const roundCustom = (val) => {
+  val = Number(val) || 0;
+  return Math.round(val);
+};
+
 exports.getInsuranceReports = async (req, res) => {
   try {
     const {
@@ -518,17 +523,30 @@ exports.getInsuranceReports = async (req, res) => {
           "Current NCB": record.currentncb || '',
           "Insurance Company": record.insurance_company || '',
           "Policy No": record.policy_no || '',
-          "OD Premium": Number(record.od_premium) || 0,
-          "Package Premium": Number(record.package_premium) || 0,
-          "Final Premium": Number(record.premium) || 0,
+
+          // "OD Premium": Number(record.od_premium) || 0,
+          // "Package Premium": Number(record.package_premium) || 0,
+          // "Final Premium": Number(record.premium) || 0,
+          // "Policy Start Date": record.policy_start_date || '',
+          // "Policy Expiry Date": record.policy_expiry_date || '',
+          // "Agent Code": record.agent_code || '',
+          // "Payout Percent": Number(record.payout_percent) || 0,
+          // "Amount": Number(record.amount) || 0,
+          // "Net Payout Percent": Number(record.net_payout_percent) || 0,
+          // "Net Amount": Number(record.net_amount) || 0,
+          // "Net Income": Number(record.net_income) || 0,
+
+          "OD Premium": roundCustom(record.od_premium),
+          "Package Premium": roundCustom(record.package_premium),
+          "Final Premium": roundCustom(record.premium),
           "Policy Start Date": record.policy_start_date || '',
           "Policy Expiry Date": record.policy_expiry_date || '',
           "Agent Code": record.agent_code || '',
-          "Payout Percent": Number(record.payout_percent) || 0,
-          "Amount": Number(record.amount) || 0,
-          "Net Payout Percent": Number(record.net_payout_percent) || 0,
-          "Net Amount": Number(record.net_amount) || 0,
-          "Net Income": Number(record.net_income) || 0,
+          "Payout Percent": roundCustom(record.payout_percent),
+          "Amount": roundCustom(record.amount),
+          "Net Payout Percent": roundCustom(record.net_payout_percent),
+          "Net Amount": roundCustom(record.net_amount),
+          "Net Income": roundCustom(record.net_income),
         };
 
         if (adminType !== 'Admin') {
