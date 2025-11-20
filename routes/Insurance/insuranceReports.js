@@ -525,12 +525,14 @@ exports.getInsuranceReports = async (req, res) => {
           "Policy Expiry Date": record.policy_expiry_date || '',
           "Agent Code": record.agent_code || '',
           "Payout Percent": Number(record.payout_percent) || 0,
+          "Amount": Number(record.amount) || 0,
           "Net Payout Percent": Number(record.net_payout_percent) || 0,
           "Net Amount": Number(record.net_amount) || 0,
           "Net Income": Number(record.net_income) || 0,
         };
 
         if (adminType !== 'Admin') {
+          delete returnData['Amount'];
           delete returnData['Final Premium'];
           delete returnData['Payout Percent'];
           delete returnData['Net Income'];
