@@ -33,14 +33,17 @@ exports.createVehicleModel = async (req, res) => {
 
 exports.getVehicleModels = async (req, res) => {
   try {
-    const vehicleModels = await db.vehicle_model.findAll({ 
-      include: [{
+      const vehicleModels = await db.vehicle_model.findAll({
+    include: [
+      {
         model: db.vehicle_company,
         as: 'company',
         attributes: ['id', 'company_name']
-      }],
-      order: [['company_name', 'ASC']] 
-    });
+      }
+    ],
+    order: [[{ model: db.vehicle_company, as: 'company' }, 'company_name', 'ASC']]
+  });
+
     return ResponseHandler.success(res, 200, 'Vehicle models retrieved successfully.', vehicleModels);
   } catch (error) {
     return ResponseHandler.error(res, 500, 'Failed to retrieve vehicle models: ' + error.message);
