@@ -16,7 +16,10 @@ exports.createInsuranceCompany = async (req, res) => {
 
 exports.listInsuranceCompanies = async (req, res) => {
   try {
-    const companies = await db.insurance_company.findAll({ order: [['id', 'DESC']] });
+    const companies = await db.insurance_company.findAll({
+      //  order: [['id', 'DESC']] 
+      order: [['name', 'ASC']]
+      });
     return ResponseHandler.success(res, 200, 'Insurance companies retrieved successfully.', companies);
   } catch (error) {
     return ResponseHandler.error(res, 500, 'Failed to retrieve insurance companies.', error);

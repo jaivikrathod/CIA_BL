@@ -168,7 +168,8 @@ exports.createVehicleCompany = async (req, res) => {
 exports.getVehicleCompanies = async (req, res) => {
   try {
     const vehicleCompanies = await db.vehicle_company.findAll({ 
-      order: [['id', 'DESC']] 
+      // order: [['id', 'DESC']]
+      order: [['company_name', 'ASC']]  
     });
     return ResponseHandler.success(res, 200, 'Vehicle companies retrieved successfully.', vehicleCompanies);
   } catch (error) {

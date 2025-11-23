@@ -7,7 +7,8 @@ exports.listUsers = async (req, res) => {
             where: {
                 id: { [db.Sequelize.Op.ne]: req.userID },
                 is_active: 1
-            }
+            },
+            order: [['full_name', 'ASC']]
         });
         return ResponseHandler.success(res, 200, 'Users retrieved successfully', Users);
     } catch (error) {
