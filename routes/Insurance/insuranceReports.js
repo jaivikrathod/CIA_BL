@@ -457,7 +457,7 @@ exports.getInsuranceReports = async (req, res) => {
         {
           model: db.customers,
           as: 'customer',
-          attributes: ['full_name', 'email', 'primary_mobile', 'additional_mobile', 'dob', 'city']
+          attributes: ['full_name', 'email', 'primary_mobile', 'additional_mobile', 'dob','full_address','state', 'city']
         },
         {
           model: db.users,
@@ -513,7 +513,7 @@ exports.getInsuranceReports = async (req, res) => {
           "DOB": customer?.dob || '',
           age: age,
           "Mobile": customer?.primary_mobile || '',
-          "Address" : customer?.full_address + customer?.city + customer?.state || '',
+          "Address" : (customer?.full_address+ ' ' + customer?.city + ' ' +customer?.state) || '',
           "Additional Mobile": customer?.additional_mobile || '',
           "Email": customer?.email || '',
           "Insurance Type": commonDetail?.insurance_type || '',
