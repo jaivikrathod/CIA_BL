@@ -54,7 +54,10 @@ exports.handleAddEditAgent = async (req, res) => {
 exports.listAgents = async (req, res) => {
     try {
         let agents;
-        agents = await db.agentscode.findAll({ where: { is_active: 1 } });
+        agents = await db.agentscode.findAll({
+            where: { is_active: 1 },
+            order: [['agent_name', 'ASC']]
+        });
         if (!agents || agents.length === 0) {
             return res.status(404).json({ success: false, message: 'No agentscode found.' });
         }

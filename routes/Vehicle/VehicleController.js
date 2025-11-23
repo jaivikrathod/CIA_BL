@@ -39,7 +39,7 @@ exports.getVehicleModels = async (req, res) => {
         as: 'company',
         attributes: ['id', 'company_name']
       }],
-      order: [['id', 'DESC']] 
+      order: [['model_name', 'ASC']] 
     });
     return ResponseHandler.success(res, 200, 'Vehicle models retrieved successfully.', vehicleModels);
   } catch (error) {
