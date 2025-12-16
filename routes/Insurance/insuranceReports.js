@@ -19,6 +19,14 @@ const computeRange = (preset, start_date, end_date) => {
       case 'this_month':
         start = new Date(end.getFullYear(), end.getMonth(), 1);
         break;
+      case 'last_month':
+        start = new Date(end.getFullYear(), end.getMonth() - 1, 1);
+        break;
+
+      case 'next_month':
+        start = new Date(end.getFullYear(), end.getMonth() + 1, 1);
+        
+        break;
       case '2m':
         start = new Date(end.getFullYear(), end.getMonth() - 1, 1);
         break;
@@ -39,11 +47,24 @@ const computeRange = (preset, start_date, end_date) => {
     }
     rangeStart = start;
     // For this_month end should be the last day of the month
-    if (preset === 'this_month') {
-      rangeEnd = new Date(end.getFullYear(), end.getMonth() + 1, 0);
-    } else {
-      rangeEnd = end;
+    switch (preset) {
+      case 'this_month':
+        rangeEnd = new Date(end.getFullYear(), end.getMonth() + 1, 0);
+        break;
+
+      case 'last_month':
+        rangeEnd = new Date(end.getFullYear(), end.getMonth(), 0);
+        break;
+
+      case 'next_month':
+        
+        rangeEnd = new Date(end.getFullYear(), end.getMonth() + 2, 0);
+        break;
+
+      default:
+        rangeEnd = end;
     }
+
   } else if (start_date && end_date) {
     rangeStart = new Date(start_date);
     rangeEnd = new Date(end_date);
@@ -504,6 +525,7 @@ exports.getInsuranceReports = async (req, res) => {
         }
 
         let returnData = {
+          "IDV": record.idv || '',
           "Business Type": record.business_type,
           "Case Type": showOfficeEmployee ? 'office' : record.case_type,
           "Office Employee":  user.full_name || '',
