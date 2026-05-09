@@ -37,7 +37,7 @@ async function sendEmailOtp(reciverEmail) {
         const validTill = new Date(Date.now() + 5 * 60 * 1000);
 
         const [response] = await db.query(
-            `INSERT INTO otp (email, otp, valid_till) 
+            `INSERT INTO otps (email, otp, valid_till) 
              VALUES (?, ?, ?)
              ON DUPLICATE KEY UPDATE 
              otp = VALUES(otp), 
