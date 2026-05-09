@@ -7,6 +7,7 @@ const signupController = require('./signup');
 const tokenController = require('./verifyToken');
 const changePass = require('./changePass');
 const forgetPass = require('./forgetPass')
+const forgetChangePass = require('./forgetChangePass')
 const verifyOTP = require('./verifyOTP');
 const validateUser = require('../authmiddleware');
 const { requireAdmin } = require('../adminmiddleware');
@@ -14,10 +15,11 @@ protectedRouter.use(validateUser.validateUser);
 
 // ==================== Auth Routes ====================
 router.post('/login', loginController.handleLogin);
-router.post('/forgot-password',forgetPass.forgetPass );
+router.post('/forgot-password', forgetPass.forgetPass);
 router.post('/verify-otp', verifyOTP.verifyOTP);
 router.post('/signup', signupController.handleSignup);
 router.post('/change-password/:id', changePass.changePass);
+router.post('/forget-change-password/:id', forgetChangePass.forgetChangePass);
 router.post('/verify-token', protectedRouter, tokenController.handleTokenVerification);
 
 // ==================== User Management ====================
@@ -26,12 +28,12 @@ const userAddEditController = require('./User/AddEditUser');
 const userDeleteController = require('./User/DeleteUser');
 const getUsersCounts = require('./User/getUsersCounts');
 
-router.post('/user-create-edit',protectedRouter,requireAdmin, userAddEditController.handleAddEditUser);
+router.post('/user-create-edit', protectedRouter, requireAdmin, userAddEditController.handleAddEditUser);
 router.post('/user-delete', protectedRouter, requireAdmin, userDeleteController.handleDeleteUser);
 router.post('/user-list', protectedRouter, userListController.listUsers);
 router.get('/getUsersCounts', protectedRouter, getUsersCounts.getUsersCounts);
 router.get('/particular-user-detail', protectedRouter, userListController.getParticularUserDetails);
-router.post('/update-particular-user', protectedRouter, requireAdmin,userListController.updateParticularUserDetails);
+router.post('/update-particular-user', protectedRouter, requireAdmin, userListController.updateParticularUserDetails);
 
 // ==================== Customer Management ====================
 const customerAddEditController = require('./cutomer/AddEditCustomer');
@@ -79,17 +81,17 @@ router.post('/delete-particular-insurance', protectedRouter, Insurance.DeletePar
 router.post('/delete-insurance-details', protectedRouter, Insurance.DeleteInsuranceDetails);
 
 router.get('/particular-insurance', protectedRouter, getParticularInsurance.getParticularInsurance);
-router.get('/particular-insurance-document',protectedRouter,getParticularInsurance.getParticularInsuranceDocuments);
+router.get('/particular-insurance-document', protectedRouter, getParticularInsurance.getParticularInsuranceDocuments);
 router.get('/get-insurance-docs/:filename', showCustomerDocument.showInsurancedocument);
-router.get('/get-common-insurance/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon);
-router.get('/get-common-insurance2/:id',protectedRouter,getInsuranceCommonDetail.getvehicalCommon2);
+router.get('/get-common-insurance/:id', protectedRouter, getInsuranceCommonDetail.getvehicalCommon);
+router.get('/get-common-insurance2/:id', protectedRouter, getInsuranceCommonDetail.getvehicalCommon2);
 router.post('/delete-insurance-document', protectedRouter, deleteInsuranceDocument.deleteDocument);
 
-router.get('/get-step',protectedRouter, getStep.getInsuranceCounterIntialStep);
-router.get('/getInitialInsuranceStatus',protectedRouter, getInitialInsuranceStatus.getInitialInsuranceStatus);
+router.get('/get-step', protectedRouter, getStep.getInsuranceCounterIntialStep);
+router.get('/getInitialInsuranceStatus', protectedRouter, getInitialInsuranceStatus.getInitialInsuranceStatus);
 
-router.get('/get-insurance-report',protectedRouter,getInsuranceReports.getInsuranceReports);
-router.get('/get-insurance-category-report',protectedRouter,getInsuranceReports.getInsuranceCategoryReports);
+router.get('/get-insurance-report', protectedRouter, getInsuranceReports.getInsuranceReports);
+router.get('/get-insurance-category-report', protectedRouter, getInsuranceReports.getInsuranceCategoryReports);
 
 
 // ==================== Insurance Company Management ====================
@@ -105,8 +107,8 @@ router.delete('/insurance-company', protectedRouter, insuranceCompanyController.
 const uploadDocument = require('./upload_documents/uploadDocument');
 const uploadInsuranceDocument = require('./upload_documents/uploadInsuranceDoc');
 
-router.post('/upload-customer',protectedRouter, uploadDocument.uploadKycDocument);
-router.post('/upload-insurance',protectedRouter, uploadInsuranceDocument.uploadInsuranceDocument);
+router.post('/upload-customer', protectedRouter, uploadDocument.uploadKycDocument);
+router.post('/upload-insurance', protectedRouter, uploadInsuranceDocument.uploadInsuranceDocument);
 
 //====================== Agent Management ====================
 
@@ -129,24 +131,24 @@ router.post('/agentcode-delete', protectedRouter, agentCodeAddEditController.han
 const VehicleController = require('./Vehicle/VehicleController');
 
 // Vehicle Company routes
-router.post('/create-vehicle-company',protectedRouter, VehicleController.createVehicleCompany);
-router.get('/get-vehicle-companies',protectedRouter, VehicleController.getVehicleCompanies);
-router.get('/get-vehicle-company/:id',protectedRouter, VehicleController.getVehicleCompanyById);
-router.post('/update-vehicle-company',protectedRouter, VehicleController.updateVehicleCompany);
-router.post('/delete-vehicle-company',protectedRouter, VehicleController.deleteVehicleCompany);
+router.post('/create-vehicle-company', protectedRouter, VehicleController.createVehicleCompany);
+router.get('/get-vehicle-companies', protectedRouter, VehicleController.getVehicleCompanies);
+router.get('/get-vehicle-company/:id', protectedRouter, VehicleController.getVehicleCompanyById);
+router.post('/update-vehicle-company', protectedRouter, VehicleController.updateVehicleCompany);
+router.post('/delete-vehicle-company', protectedRouter, VehicleController.deleteVehicleCompany);
 
 // Vehicle Model routes
-router.post('/create-vehicle-model',protectedRouter, VehicleController.createVehicleModel);
-router.get('/get-vehicle-models',protectedRouter, VehicleController.getVehicleModels);
-router.get('/get-vehicle-modelBycompany',protectedRouter, VehicleController.getVehicleModelsById);
-router.post('/update-vehicle-model',protectedRouter, VehicleController.updateVehicleModel);
-router.post('/delete-vehicle-model',protectedRouter, VehicleController.deleteVehicleModel);
+router.post('/create-vehicle-model', protectedRouter, VehicleController.createVehicleModel);
+router.get('/get-vehicle-models', protectedRouter, VehicleController.getVehicleModels);
+router.get('/get-vehicle-modelBycompany', protectedRouter, VehicleController.getVehicleModelsById);
+router.post('/update-vehicle-model', protectedRouter, VehicleController.updateVehicleModel);
+router.post('/delete-vehicle-model', protectedRouter, VehicleController.deleteVehicleModel);
 
 
 //submit insurance forms
 
 const customerQueriesController = require('./cutomer/customerQueriesController');
 
-router.post('/customer-queries',customerQueriesController.submitUserQueries);
+router.post('/customer-queries', customerQueriesController.submitUserQueries);
 
 module.exports = router;
