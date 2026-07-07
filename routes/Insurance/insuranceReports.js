@@ -250,7 +250,8 @@ exports.getInsuranceReports = async (req, res) => {
       net_payout_percent,
       net_amount,
       net_income,
-      payout_percent
+      payout_percent,
+      cashback_amount
     ] = await Promise.all([
       db.insurance_details.count({ where: combinedWhere }),
       db.insurance_details.sum('package_premium', { where: combinedWhere }),
@@ -263,6 +264,7 @@ exports.getInsuranceReports = async (req, res) => {
       db.insurance_details.sum('net_amount', { where: combinedWhere }),
       db.insurance_details.sum('net_income', { where: combinedWhere }),
       db.insurance_details.sum('payout_percent', { where: combinedWhere }),
+      db.insurance_details.sum('cashback_amount', { where: combinedWhere }),
     ]);
 
     // Users / Customers / Agents counts (with date filters for customers)
