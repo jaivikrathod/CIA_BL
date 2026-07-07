@@ -155,6 +155,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 0.00
     },
+    cashback_amount: {
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: true,
+      defaultValue: 0.00
+    },
 
     payment_received: {
       type: DataTypes.TINYINT,

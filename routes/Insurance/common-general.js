@@ -31,6 +31,7 @@ exports.generalCommon = async (req, res) => {
       agent_code,
       net_payout_percent,
       net_amount,
+      cashback_amount,
       net_income
     } = req.body;
 
@@ -80,6 +81,7 @@ exports.generalCommon = async (req, res) => {
       agent_code:agent_code,
       net_payout_percent: net_payout_percent,
       net_amount: net_amount,
+      cashback_amount: cashback_amount,
       net_income: net_income
     });
 

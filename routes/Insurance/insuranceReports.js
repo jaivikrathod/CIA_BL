@@ -572,6 +572,7 @@ exports.getInsuranceReports = async (req, res) => {
           "Net Payout Percent": roundCustom(record.net_payout_percent),
           "Net Amount": roundCustom(record.net_amount),
           "Net Income": roundCustom(record.net_income),
+          "Cashback Amount": roundCustom(record.cashback_amount),
         };
 
         if (adminType !== 'Admin') {
@@ -611,7 +612,8 @@ exports.getInsuranceReports = async (req, res) => {
         net_payout_percent: Number(net_payout_percent || 0),
         net_amount: Number(net_amount || 0),
         net_income: Number(net_income || 0),
-        payout_percent: Number(payout_percent || 0)
+        payout_percent: Number(payout_percent || 0),
+        cashback_amount: Number(cashback_amount || 0)
       }
     };
 
